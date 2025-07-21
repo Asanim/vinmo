@@ -130,7 +130,8 @@ The project uses standard ROS2 packages:
 - `joint_state_publisher`
 - `urdf`
 - `xacro`
-- `gazebo_ros_pkgs`
+- `ros_gz`
+- `ros_gz_sim`
 - `rviz2`
 
 ## License

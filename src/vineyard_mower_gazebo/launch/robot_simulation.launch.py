@@ -3,14 +3,13 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the package directories
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
     pkg_vineyard_mower_description = get_package_share_directory('vineyard_mower_description')
     pkg_vineyard_mower_gazebo = get_package_share_directory('vineyard_mower_gazebo')
 
@@ -40,19 +39,10 @@ def generate_launch_description():
             'y_pose', default_value='0.0',
             description='y position of robot'),
 
-        # Start Gazebo server
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
-            ),
-            launch_arguments={'world': world}.items()
-        ),
-
-        # Start Gazebo client    
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
-            )
+        # Start Gz Sim
+        ExecuteProcess(
+            cmd=['gz', 'sim', world, '-v', '4'],
+            output='screen'
         ),
 
         # Robot State Publisher
@@ -66,12 +56,12 @@ def generate_launch_description():
 
         # Spawn robot
         Node(
-            package='gazebo_ros',
-            executable='spawn_entity.py',
+            package='ros_gz_sim',
+            executable='create',
             name='urdf_spawner',
             output='screen',
             arguments=['-topic', '/robot_description',
-                      '-entity', 'vineyard_mower',
+                      '-name', 'vineyard_mower',
                       '-x', x_pose, '-y', y_pose, '-z', '0.20']),
 
         # RViz

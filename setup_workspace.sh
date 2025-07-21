@@ -4,6 +4,27 @@
 
 echo "Setting up ROS2 Vineyard Mower Robot workspace..."
 
+first_install() {
+    # sudo apt install ros-jazzy-gazebo-msgs ros-jazzy-turtlebot3-gazebo
+    # sudo apt update && sudo apt install -y ros-jazzy-gazebo-ros-pkgs ros-jazzy-gazebo-ros
+export ROS_DISTRO=jazzy
+    sudo apt install -y ros-jazzy-gz-ros2-control
+
+sudo apt update && sudo apt install -y ros-jazzy-ros-gz ros-jazzy-ros-gz-sim ros-jazzy-ros-gz-bridge ros-jazzy-gz-sim-vendor
+
+    sudo apt install -y  ros-jazzy-ros-gz ros-jazzy-ros-gz-bridge ros-jazzy-ros-gz-image ros-jazzy-ros-gz-interfaces\
+    sudo apt install -y  ros-jazzy-ros-gz-sim ros-jazzy-ros-gz-sim-demos
+    ros-jazzy-gazebo-msgs  ros-jazzy-gz-common-vendor ros-jazzy-gz-launch-vendor ros-jazzy-gz-gui-vendor
+sudo apt-get install ros-${ROS_DISTRO}-ros-gz
+
+sudo apt-get install ros-${ROS_DISTRO}-gz-tools-vendor ros-${ROS_DISTRO}-gz-sim-vendor
+. /opt/ros/jazzy/setup.bash
+gz sim --help
+
+
+}
+
+
 # Source ROS2 installation
 source /opt/ros/jazzy/setup.bash
 
