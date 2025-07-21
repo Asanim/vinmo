@@ -9,7 +9,7 @@ source /opt/ros/jazzy/setup.bash
 
 # Build the workspace
 echo "Building workspace..."
-cd /home/sam/vinmo
+cd $HOME/vinmo
 colcon build --symlink-install
 
 # Source the workspace
