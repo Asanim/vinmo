@@ -3,8 +3,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler, TimerAction
-from launch.event_handlers import OnProcessExit
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
@@ -44,11 +43,18 @@ def generate_launch_description():
             description='y position of robot'),
 
         # Start Gz Sim
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                os.path.join(get_package_share_directory('ros_gz_sim'), 'launch'),
-                '/gz_sim.launch.py']),
-            launch_arguments={'gz_args': ['-r -v4 ', world]}.items()
+        ExecuteProcess(
+            cmd=['gz', 'sim', world, '-v', '4'],
+            output='screen'
+        ),
+
+        # Clock bridge (critical - must start early)
+        Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            name='ros_gz_bridge_clock',
+            arguments=['/clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock'],
+            output='screen'
         ),
 
         # Robot State Publisher
@@ -61,27 +67,23 @@ def generate_launch_description():
             arguments=[urdf]),
 
         # Spawn robot
-        Node(
-            package='ros_gz_sim',
-            executable='create',
-            name='urdf_spawner',
-            output='screen',
-            arguments=['-topic', '/robot_description',
-                      '-name', 'vineyard_mower',
-                      '-x', x_pose, '-y', y_pose, '-z', '0.20']),
-
-        # Clock bridge (must be first for proper time sync)
-        Node(
-            package='ros_gz_bridge',
-            executable='parameter_bridge',
-            name='ros_gz_bridge_clock',
-            arguments=['/clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock'],
-            output='screen'
+        TimerAction(
+            period=2.0,
+            actions=[
+                Node(
+                    package='ros_gz_sim',
+                    executable='create',
+                    name='urdf_spawner',
+                    output='screen',
+                    arguments=['-topic', '/robot_description',
+                              '-name', 'vineyard_mower',
+                              '-x', x_pose, '-y', y_pose, '-z', '0.20']),
+            ]
         ),
 
-        # Controller Manager (delayed to ensure clock is available)
+        # Controller Manager (delayed to ensure clock sync)
         TimerAction(
-            period=3.0,
+            period=4.0,
             actions=[
                 Node(
                     package='controller_manager',
@@ -92,11 +94,10 @@ def generate_launch_description():
             ]
         ),
 
-        # Controllers (delayed further to ensure controller manager is ready)
+        # Controllers (delayed further)
         TimerAction(
-            period=5.0,
+            period=6.0,
             actions=[
-                # Joint State Broadcaster
                 Node(
                     package='controller_manager',
                     executable='spawner',
@@ -104,8 +105,6 @@ def generate_launch_description():
                     parameters=[{'use_sim_time': use_sim_time}],
                     output='screen',
                 ),
-
-                # Differential Drive Controller
                 Node(
                     package='controller_manager',
                     executable='spawner',
@@ -116,30 +115,30 @@ def generate_launch_description():
             ]
         ),
 
-        # RViz
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            output='screen',
-            arguments=['-d', os.path.join(pkg_vineyard_mower_description, 'config', 'display.rviz')],
-            parameters=[{'use_sim_time': use_sim_time}]),
-
-        # ROS-Gz Bridge for sensor data
+        # Sensor bridges
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
             name='ros_gz_bridge_sensors',
             arguments=[
                 '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
-                '/front_camera/image@sensor_msgs/msg/Image@gz.msgs.Image',
-                '/front_camera/depth_image@sensor_msgs/msg/Image@gz.msgs.Image',
-                '/front_camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
-                '/rear_camera/image@sensor_msgs/msg/Image@gz.msgs.Image',
-                '/rear_camera/depth_image@sensor_msgs/msg/Image@gz.msgs.Image',
-                '/rear_camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
                 '/imu@sensor_msgs/msg/Imu@gz.msgs.IMU'
             ],
             output='screen'
+        ),
+
+        # Teleoperation for testing
+        TimerAction(
+            period=8.0,
+            actions=[
+                Node(
+                    package='teleop_twist_keyboard',
+                    executable='teleop_twist_keyboard',
+                    name='teleop_keyboard',
+                    output='screen',
+                    prefix='xterm -e',
+                    remappings=[('/cmd_vel', '/diff_drive_controller/cmd_vel_unstamped')],
+                ),
+            ]
         ),
     ])
