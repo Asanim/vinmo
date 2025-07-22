@@ -20,7 +20,7 @@ sudo apt-get install ros-${ROS_DISTRO}-ros-gz
 sudo apt-get install ros-${ROS_DISTRO}-gz-tools-vendor ros-${ROS_DISTRO}-gz-sim-vendor
 . /opt/ros/jazzy/setup.bash
 gz sim --help
-
+sudo apt update && sudo apt install -y ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-gz-ros2-control ros-jazzy-controller-manager ros-jazzy-diff-drive-controller ros-jazzy-joint-state-broadcaster
 
 }
 
