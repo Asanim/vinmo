@@ -28,7 +28,7 @@ def generate_launch_description():
         name='simple_publisher',
         output='screen',
         parameters=[
-            {'use_sim_time': True}
+            {'use_sim_time': False}
         ],
         arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')]
     )
@@ -40,7 +40,7 @@ def generate_launch_description():
         name='simple_subscriber',
         output='screen',
         parameters=[
-            {'use_sim_time': True}
+            {'use_sim_time': False}
         ],
         arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')]
     )
