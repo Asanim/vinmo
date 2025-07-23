@@ -3,7 +3,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction, ExecuteProcess
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
@@ -20,13 +20,8 @@ def generate_launch_description():
     # World file path
     world = os.path.join(pkg_vineyard_mower_gazebo, 'worlds', 'vineyard.world')
 
-    # Control config file
-    control_config = os.path.join(pkg_vineyard_mower_description, 'config', 'control_config.yaml')
-
     # Launch configuration variables
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    x_pose = LaunchConfiguration('x_pose', default='0.0')
-    y_pose = LaunchConfiguration('y_pose', default='0.0')
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -34,27 +29,25 @@ def generate_launch_description():
             default_value='true',
             description='Use simulation (Gazebo) clock if true'),
 
-        DeclareLaunchArgument(
-            'x_pose', default_value='0.0',
-            description='x position of robot'),
-
-        DeclareLaunchArgument(
-            'y_pose', default_value='0.0',
-            description='y position of robot'),
-
-        # Start Gz Sim
-        ExecuteProcess(
-            cmd=['gz', 'sim', world, '-v', '4'],
-            output='screen'
-        ),
-
-        # Clock bridge (critical - must start early)
+        # Clock Bridge - MUST START FIRST
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
             name='ros_gz_bridge_clock',
             arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
-            output='screen'
+            output='screen',
+            parameters=[{'use_sim_time': True}]
+        ),
+
+        # Start Gz Sim with clock already bridged
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                os.path.join(get_package_share_directory('ros_gz_sim'), 'launch'),
+                '/gz_sim.launch.py']),
+            launch_arguments={
+                'gz_args': ['-r -v4 ', world],
+                'use_sim_time': 'true'
+            }.items()
         ),
 
         # Robot State Publisher
@@ -64,11 +57,11 @@ def generate_launch_description():
             name='robot_state_publisher',
             output='screen',
             parameters=[{'use_sim_time': use_sim_time, 'robot_description': Command(['xacro ', urdf])}],
-            arguments=[urdf]),
+        ),
 
-        # Spawn robot
+        # Spawn robot with delay to ensure Gazebo is ready
         TimerAction(
-            period=2.0,
+            period=3.0,
             actions=[
                 Node(
                     package='ros_gz_sim',
@@ -77,67 +70,34 @@ def generate_launch_description():
                     output='screen',
                     arguments=['-topic', '/robot_description',
                               '-name', 'vineyard_mower',
-                              '-x', x_pose, '-y', y_pose, '-z', '0.20']),
+                              '-z', '0.20'],
+                )
             ]
         ),
 
-        # Controller Manager (delayed to ensure clock sync)
-        TimerAction(
-            period=4.0,
-            actions=[
-                Node(
-                    package='controller_manager',
-                    executable='ros2_control_node',
-                    parameters=[{'use_sim_time': use_sim_time, 'robot_description': Command(['xacro ', urdf])}, control_config],
-                    output='screen',
-                ),
-            ]
-        ),
-
-        # Controllers (delayed further)
-        TimerAction(
-            period=6.0,
-            actions=[
-                Node(
-                    package='controller_manager',
-                    executable='spawner',
-                    arguments=['joint_state_broadcaster'],
-                    parameters=[{'use_sim_time': use_sim_time}],
-                    output='screen',
-                ),
-                Node(
-                    package='controller_manager',
-                    executable='spawner',
-                    arguments=['diff_drive_controller'],
-                    parameters=[{'use_sim_time': use_sim_time}],
-                    output='screen',
-                ),
-            ]
-        ),
-
-        # Sensor bridges
-        Node(
-            package='ros_gz_bridge',
-            executable='parameter_bridge',
-            name='ros_gz_bridge_sensors',
-            arguments=[
-                '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
-                '/imu@sensor_msgs/msg/Imu@gz.msgs.IMU'
-            ],
-            output='screen'
-        ),
-
-        # Teleoperation for testing
+        # Test controllers with longer delay
         TimerAction(
             period=8.0,
             actions=[
                 Node(
-                    package='teleop_twist_keyboard',
-                    executable='teleop_twist_keyboard',
-                    name='teleop_keyboard',
+                    package='controller_manager',
+                    executable='spawner',
+                    arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+                    parameters=[{'use_sim_time': use_sim_time}],
                     output='screen',
-                    prefix='xterm -e',
-                    remappings=[('/cmd_vel', '/diff_drive_controller/cmd_vel_unstamped')],
+                ),
+            ]
+        ),
+
+        TimerAction(
+            period=10.0,
+            actions=[
+                Node(
+                    package='controller_manager',
+                    executable='spawner',
+                    arguments=['diff_drive_controller', '--controller-manager', '/controller_manager'],
+                    parameters=[{'use_sim_time': use_sim_time}],
+                    output='screen',
                 ),
             ]
         ),

@@ -30,11 +30,12 @@ def generate_launch_description():
         ),
 
         # Clock Bridge (CRITICAL: Must start immediately)
+        # Use [ ] syntax to forward only from Gazebo to ROS 2, preventing conflicts
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
             name='ros_gz_bridge_clock',
-            arguments=['/clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock'],
+            arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
             output='screen',
             parameters=[{'use_sim_time': True}]
         ),
