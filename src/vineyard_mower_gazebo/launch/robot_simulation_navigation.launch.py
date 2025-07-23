@@ -194,7 +194,20 @@ def generate_launch_description():
                 name='teleop_keyboard',
                 output='screen',
                 prefix='xterm -e',
-                remappings=[('/cmd_vel', '/diff_drive_controller/cmd_vel_unstamped')],
+                remappings=[('/cmd_vel', '/cmd_vel_unstamped')],
+                condition=IfCondition(enable_teleop)
+            ),
+
+            # Convert unstamped Twist to TwistStamped
+            Node(
+                package='twist_stamper',
+                executable='twist_stamper',
+                name='twist_stamper',
+                parameters=[{'use_sim_time': use_sim_time}],
+                remappings=[
+                    ('/cmd_vel_in', '/cmd_vel_unstamped'),
+                    ('/cmd_vel_out', '/diff_drive_controller/cmd_vel')
+                ],
                 condition=IfCondition(enable_teleop)
             ),
 
@@ -218,7 +231,7 @@ def generate_launch_description():
                     'enable_button': 0,
                     'enable_turbo_button': -1,
                 }],
-                remappings=[('/cmd_vel', '/diff_drive_controller/cmd_vel_unstamped')],
+                remappings=[('/cmd_vel', '/cmd_vel_unstamped')],
                 condition=IfCondition(enable_teleop)
             ),
         ]),
