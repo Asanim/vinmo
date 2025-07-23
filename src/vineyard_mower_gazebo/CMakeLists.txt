@@ -10,8 +10,18 @@ find_package(ament_cmake REQUIRED)
 
 # Install directories
 install(
-  DIRECTORY launch worlds
+  DIRECTORY launch worlds scripts
   DESTINATION share/${PROJECT_NAME}
+  USE_SOURCE_PERMISSIONS
+)
+
+# Install Python scripts
+install(
+  PROGRAMS
+    scripts/simple_publisher.py
+    scripts/simple_subscriber.py
+    scripts/check_clock.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
