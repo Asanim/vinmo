@@ -194,6 +194,16 @@ def generate_launch_description():
                 name='teleop_keyboard',
                 output='screen',
                 prefix='xterm -e',
+                parameters=[{
+                    'key_forward': 'w',
+                    'key_backward': 's',
+                    'key_left': 'a',
+                    'key_right': 'd',
+                    'key_run': 'shift',
+                    'key_teleop': 'q',
+                    'scale_linear': 0.5,
+                    'scale_angular': 1.0
+                }],
                 remappings=[('/cmd_vel', '/cmd_vel_unstamped')],
                 condition=IfCondition(enable_teleop)
             ),
@@ -216,6 +226,12 @@ def generate_launch_description():
                 package='joy',
                 executable='joy_node',
                 name='joy_node',
+                parameters=[{
+                    'use_sim_time': use_sim_time,
+                    'dev': '/dev/input/js0',
+                    'deadzone': 0.3,
+                    'autorepeat_rate': 20.0,
+                }],
                 condition=IfCondition(enable_teleop)
             ),
 
@@ -224,12 +240,14 @@ def generate_launch_description():
                 executable='teleop_node',
                 name='teleop_joy',
                 parameters=[{
+                    'use_sim_time': use_sim_time,
                     'axis_linear.x': 1,
                     'axis_angular.yaw': 0,
                     'scale_linear.x': 0.7,
                     'scale_angular.yaw': 1.0,
                     'enable_button': 0,
                     'enable_turbo_button': -1,
+                    'require_enable_button': True,
                 }],
                 remappings=[('/cmd_vel', '/cmd_vel_unstamped')],
                 condition=IfCondition(enable_teleop)
