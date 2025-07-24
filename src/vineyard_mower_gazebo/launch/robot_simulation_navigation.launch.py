@@ -286,7 +286,16 @@ def generate_launch_description():
                 executable='rviz2',
                 name='rviz2',
                 output='screen',
-                arguments=['-d', os.path.join(pkg_vineyard_mower_navigation, 'config', 'slam_config.rviz')],
+                arguments=['-d', os.path.join(pkg_vineyard_mower_navigation, 'config', 'slam.rviz')],
+                parameters=[{'use_sim_time': use_sim_time}],
+                condition=IfCondition(enable_rviz)
+            ),
+            Node(
+                package='rviz2',
+                executable='rviz2',
+                name='rviz2',
+                output='screen',
+                arguments=['-d', os.path.join(pkg_vineyard_mower_description, 'config', 'display.rviz')],
                 parameters=[{'use_sim_time': use_sim_time}],
                 condition=IfCondition(enable_rviz)
             ),

@@ -360,7 +360,9 @@
 
   <!-- LiDAR sensor plugin -->
   <gazebo reference="lidar_link">
-    <sensor name="gpu_lidar" type="gpu_lidar">
+    <!-- <sensor name="gpu_lidar" type="gpu_lidar">
+     -->
+      <sensor name="lidar" type="gpu_lidar">
       <pose>0 0 0 0 0 0</pose>
       <topic>scan</topic>
       <update_rate>10</update_rate>
