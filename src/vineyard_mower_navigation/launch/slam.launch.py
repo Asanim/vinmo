@@ -40,13 +40,13 @@ def generate_launch_description():
             default_value='vineyard_mower_2d.lua',
             description='Name of config file to load'),
 
-        # Include robot simulation
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(pkg_vineyard_mower_gazebo, 'launch', 'robot_simulation.launch.py')
-            ),
-            launch_arguments={'use_sim_time': use_sim_time}.items()
-        ),
+        # Cartographer nodes only (robot simulation handled by main launch file)
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         os.path.join(pkg_vineyard_mower_gazebo, 'launch', 'robot_simulation.launch.py')
+        #     ),
+        #     launch_arguments={'use_sim_time': use_sim_time}.items()
+        # ),
 
         # Cartographer node
         Node(

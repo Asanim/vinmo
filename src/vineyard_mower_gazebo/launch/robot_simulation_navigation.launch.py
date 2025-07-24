@@ -27,9 +27,9 @@ def generate_launch_description():
     x_pose = LaunchConfiguration('x_pose', default='0.0')
     y_pose = LaunchConfiguration('y_pose', default='0.0')
     enable_teleop = LaunchConfiguration('enable_teleop', default='true')
-    enable_slam = LaunchConfiguration('enable_slam', default='false')
+    enable_slam = LaunchConfiguration('enable_slam', default='true')
     enable_rviz = LaunchConfiguration('enable_rviz', default='true')
-    enable_navigation = LaunchConfiguration('enable_navigation', default='false')
+    enable_navigation = LaunchConfiguration('enable_navigation', default='true')
 
     return LaunchDescription([
         # Launch Arguments
@@ -51,7 +51,7 @@ def generate_launch_description():
             description='Enable teleoperation'),
 
         DeclareLaunchArgument(
-            'enable_slam', default_value='false',
+            'enable_slam', default_value='true',
             description='Enable SLAM mapping'),
 
         DeclareLaunchArgument(
@@ -266,17 +266,17 @@ def generate_launch_description():
             ),
         ]),
 
-        # Navigation Group (Nav2)
-        GroupAction([
-            # Navigation2 Stack (when implemented)
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    os.path.join(pkg_vineyard_mower_navigation, 'launch'),
-                    '/navigation.launch.py']),
-                launch_arguments={'use_sim_time': use_sim_time}.items(),
-                condition=IfCondition(enable_navigation)
-            ),
-        ]),
+        # Navigation Group (Nav2) - Commented out until navigation.launch.py is created
+        # GroupAction([
+        #     # Navigation2 Stack (when implemented)
+        #     IncludeLaunchDescription(
+        #         PythonLaunchDescriptionSource([
+        #             os.path.join(pkg_vineyard_mower_navigation, 'launch'),
+        #             '/navigation.launch.py']),
+        #         launch_arguments={'use_sim_time': use_sim_time}.items(),
+        #         condition=IfCondition(enable_navigation)
+        #     ),
+        # ]),
 
         # Visualization Group
         GroupAction([

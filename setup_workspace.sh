@@ -24,6 +24,9 @@ sudo apt update && sudo apt install -y ros-jazzy-ros2-control ros-jazzy-ros2-con
 sudo apt install xterm
 sudo apt-get install ros-jazzy-diagnostic-aggregator
 
+sudo apt install ros-jazzy-cartographer ros-jazzy-cartographer-ros ros-jazzy-cartographer-ros-msgs ros-jazzy-cartographer-rviz
+
+
 }
 
 
