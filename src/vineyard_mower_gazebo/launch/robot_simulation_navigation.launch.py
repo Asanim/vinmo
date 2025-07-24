@@ -154,15 +154,26 @@ def generate_launch_description():
                             '/imu@sensor_msgs/msg/Imu@gz.msgs.IMU'
                         ],
                         output='screen',
-                        parameters=[{'use_sim_time': use_sim_time}]
+                        parameters=[{'use_sim_time': use_sim_time}],
+                        remappings=[
+                            ('/scan', '/scan_raw')
+                        ]
                     ),
 
-                    # Transform for sensors
+                    # Frame remapper for laser scan to use correct frame names
                     Node(
                         package='tf2_ros',
                         executable='static_transform_publisher',
-                        name='base_link_to_lidar',
-                        arguments=['0', '0', '0.15', '0', '0', '0', 'base_link', 'lidar_link'],
+                        name='gazebo_to_ros_frames',
+                        arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'vineyard_mower/base_link'],
+                        parameters=[{'use_sim_time': use_sim_time}]
+                    ),
+
+                    Node(
+                        package='tf2_ros',
+                        executable='static_transform_publisher',
+                        name='lidar_frame_bridge',
+                        arguments=['0', '0', '0', '0', '0', '0', 'lidar_link', 'vineyard_mower/base_link/lidar_link'],
                         parameters=[{'use_sim_time': use_sim_time}]
                     ),
 
