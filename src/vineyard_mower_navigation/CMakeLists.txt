@@ -10,8 +10,14 @@ find_package(ament_cmake REQUIRED)
 
 # Install directories
 install(
-  DIRECTORY launch config maps
+  DIRECTORY launch config maps scripts
   DESTINATION share/${PROJECT_NAME}
+)
+
+# Install Python scripts
+install(
+  PROGRAMS scripts/laser_scan_frame_remapper.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

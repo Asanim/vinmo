@@ -160,6 +160,15 @@ def generate_launch_description():
                         ]
                     ),
 
+                    # Laser scan frame remapper to fix frame_id issues
+                    Node(
+                        package='vineyard_mower_navigation',
+                        executable='laser_scan_frame_remapper.py',
+                        name='laser_scan_frame_remapper',
+                        output='screen',
+                        parameters=[{'use_sim_time': use_sim_time}]
+                    ),
+
                     # Frame remapper for laser scan to use correct frame names
                     Node(
                         package='tf2_ros',
