@@ -10,6 +10,8 @@ first_install() {
     export ROS_DISTRO=jazzy
     sudo apt install -y ros-jazzy-gz-ros2-control
 
+    pip install catkin_pkg
+
     sudo apt update && sudo apt install -y ros-jazzy-ros-gz ros-jazzy-ros-gz-sim ros-jazzy-ros-gz-bridge ros-jazzy-gz-sim-vendor
 
     sudo apt install -y  ros-jazzy-ros-gz ros-jazzy-ros-gz-bridge ros-jazzy-ros-gz-image ros-jazzy-ros-gz-interfaces\
@@ -24,6 +26,7 @@ first_install() {
 
     sudo apt install -y ros-jazzy-cartographer ros-jazzy-cartographer-ros ros-jazzy-cartographer-ros-msgs ros-jazzy-cartographer-rviz
 
+    sudo apt install -y ros-jazzy-twist-stamper
     gz sim --help
 
 }
