@@ -16,7 +16,11 @@ install(
 
 # Install Python scripts
 install(
-  PROGRAMS scripts/laser_scan_frame_remapper.py
+  PROGRAMS 
+    scripts/laser_scan_frame_remapper.py
+    scripts/gps_reference_publisher.py
+    scripts/vineyard_row_detector.py
+    scripts/test_navigation_integration.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

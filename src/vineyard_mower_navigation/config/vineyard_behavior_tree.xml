@@ -1,0 +1,60 @@
+<!--
+  This Behavior Tree replaces the default behavior tree provided by Nav2 with vineyard-specific behaviors.
+  It is specifically designed for agricultural autonomous navigation with enhanced recovery behaviors
+  for narrow corridors and structured vineyard environments.
+-->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="6" name="NavigateRecovery">
+      <PipelineSequence name="VineyardNavigateWithReplanning">
+        <RateController hz="1.0">
+          <RecoveryNode number_of_retries="1" name="ComputePathToPose">
+            <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+            <ReactiveFallback name="ComputePathRecoveryFallback">
+              <GoalUpdated/>
+              <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+            </ReactiveFallback>
+          </RecoveryNode>
+        </RateController>
+        <RecoveryNode number_of_retries="1" name="FollowPath">
+          <FollowPath path="{path}" controller_id="FollowPath"/>
+          <ReactiveFallback name="FollowPathRecoveryFallback">
+            <GoalUpdated/>
+            <RoundRobin name="VineyardRecoveryActions">
+              <Sequence name="ClearingRotation">
+                <ClearEntireCostmap name="ClearLocalCostmap-Context" service_name="local_costmap/clear_entirely_local_costmap"/>
+                <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+                <Spin spin_dist="1.57"/>
+              </Sequence>
+              <Sequence name="BackupAndClear">
+                <BackUp backup_dist="0.30" backup_speed="0.025"/>
+                <Wait wait_duration="1"/>
+                <ClearEntireCostmap name="ClearLocalCostmap-Context" service_name="local_costmap/clear_entirely_local_costmap"/>
+              </Sequence>
+              <Sequence name="AssistedTeleopRecovery">
+                <AssistedTeleop time_allowance="30"/>
+              </Sequence>
+            </RoundRobin>
+          </ReactiveFallback>
+        </RecoveryNode>
+      </PipelineSequence>
+      <ReactiveFallback name="RecoveryFallback">
+        <GoalUpdated/>
+        <RoundRobin name="RecoverySequence">
+          <Sequence name="VineyardClearingSequence">
+            <ClearEntireCostmap name="ClearLocalCostmap-Fallback" service_name="local_costmap/clear_entirely_local_costmap"/>
+            <ClearEntireCostmap name="ClearGlobalCostmap-Fallback" service_name="global_costmap/clear_entirely_global_costmap"/>
+            <Spin spin_dist="1.57"/>
+            <Wait wait_duration="1"/>
+          </Sequence>
+          <Sequence name="VineyardBackupSequence">
+            <BackUp backup_dist="0.50" backup_speed="0.025"/>
+            <Spin spin_dist="3.14"/>
+            <Wait wait_duration="1"/>
+          </Sequence>
+          <AssistedTeleop time_allowance="60"/>
+        </RoundRobin>
+      </ReactiveFallback>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

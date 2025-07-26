@@ -59,7 +59,7 @@ def generate_launch_description():
             description='Enable RViz visualization'),
 
         DeclareLaunchArgument(
-            'enable_navigation', default_value='false',
+            'enable_navigation', default_value='true',
             description='Enable autonomous navigation (Nav2)'),
 
         # Gazebo Simulation Group
@@ -286,17 +286,22 @@ def generate_launch_description():
             ),
         ]),
 
-        # Navigation Group (Nav2) - Commented out until navigation.launch.py is created
-        # GroupAction([
-        #     # Navigation2 Stack (when implemented)
-        #     IncludeLaunchDescription(
-        #         PythonLaunchDescriptionSource([
-        #             os.path.join(pkg_vineyard_mower_navigation, 'launch'),
-        #             '/navigation.launch.py']),
-        #         launch_arguments={'use_sim_time': use_sim_time}.items(),
-        #         condition=IfCondition(enable_navigation)
-        #     ),
-        # ]),
+        # Navigation Group (Nav2)
+        GroupAction([
+            # Navigation2 Stack
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(pkg_vineyard_mower_navigation, 'launch'),
+                    '/vineyard_navigation.launch.py']),
+                launch_arguments={
+                    'use_sim_time': use_sim_time,
+                    'slam': 'False',  # Use localization mode by default
+                    'navigation': 'True',
+                    'use_rviz': 'False'  # We'll use our own RViz
+                }.items(),
+                condition=IfCondition(enable_navigation)
+            ),
+        ]),
 
         # Visualization Group
         GroupAction([
