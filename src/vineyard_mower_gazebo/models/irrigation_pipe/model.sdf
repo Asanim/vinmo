@@ -1,0 +1,122 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <model name="irrigation_pipe">
+    <static>true</static>
+    
+    <!-- Main pipe -->
+    <link name="main_pipe">
+      <pose>0 0 0.05 0 1.57 0</pose>
+      <collision name="main_pipe_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.025</radius>
+            <length>5.0</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="main_pipe_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.025</radius>
+            <length>5.0</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.2 0.2 0.2 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+    </link>
+    
+    <!-- Drip emitter 1 -->
+    <link name="emitter_1">
+      <pose>1.0 0 0.05 0 0 0</pose>
+      <collision name="emitter_1_collision">
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name="emitter_1_visual">
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+    </link>
+    
+    <!-- Drip emitter 2 -->
+    <link name="emitter_2">
+      <pose>-1.0 0 0.05 0 0 0</pose>
+      <collision name="emitter_2_collision">
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name="emitter_2_visual">
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+    </link>
+    
+    <!-- Support stakes -->
+    <link name="stake_1">
+      <pose>2.0 0 0.15 0 0 0</pose>
+      <collision name="stake_1_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>0.3</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="stake_1_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>0.3</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.4 0.3 0.2 1</ambient>
+          <diffuse>0.6 0.4 0.3 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+    
+    <!-- Fixed joints -->
+    <joint name="pipe_to_emitter_1" type="fixed">
+      <parent>main_pipe</parent>
+      <child>emitter_1</child>
+    </joint>
+    
+    <joint name="pipe_to_emitter_2" type="fixed">
+      <parent>main_pipe</parent>
+      <child>emitter_2</child>
+    </joint>
+    
+    <joint name="pipe_to_stake_1" type="fixed">
+      <parent>main_pipe</parent>
+      <child>stake_1</child>
+    </joint>
+  </model>
+</sdf>

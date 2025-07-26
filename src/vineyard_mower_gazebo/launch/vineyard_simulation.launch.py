@@ -19,7 +19,7 @@ def generate_launch_description():
     urdf_file_name = 'vineyard_mower.urdf.xacro'
     urdf = os.path.join(pkg_vineyard_mower_description, 'urdf', urdf_file_name)
 
-    # World file path
+    # Realistic vineyard world file
     world = os.path.join(pkg_vineyard_mower_gazebo, 'worlds', 'realistic_vineyard.world')
 
     # Launch configuration variables
@@ -29,7 +29,9 @@ def generate_launch_description():
     enable_teleop = LaunchConfiguration('enable_teleop', default='true')
     enable_slam = LaunchConfiguration('enable_slam', default='true')
     enable_rviz = LaunchConfiguration('enable_rviz', default='true')
-    enable_navigation = LaunchConfiguration('enable_navigation', default='true')
+    enable_navigation = LaunchConfiguration('enable_navigation', default='false')
+    vineyard_season = LaunchConfiguration('vineyard_season', default='summer')
+    weather_enabled = LaunchConfiguration('weather_enabled', default='false')
 
     return LaunchDescription([
         # Launch Arguments
@@ -62,6 +64,14 @@ def generate_launch_description():
             'enable_navigation', default_value='false',
             description='Enable autonomous navigation (Nav2)'),
 
+        DeclareLaunchArgument(
+            'vineyard_season', default_value='summer',
+            description='Vineyard season: spring, summer, autumn, winter'),
+
+        DeclareLaunchArgument(
+            'weather_enabled', default_value='false',
+            description='Enable weather effects'),
+
         # Gazebo Simulation Group
         GroupAction([
             # Clock Bridge (MUST BE FIRST!)
@@ -77,7 +87,7 @@ def generate_launch_description():
                 ]
             ),
 
-            # Start Gz Sim
+            # Start Gz Sim with realistic vineyard world
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([
                     os.path.join(get_package_share_directory('ros_gz_sim'), 'launch'),
@@ -94,7 +104,7 @@ def generate_launch_description():
                 parameters=[{'use_sim_time': use_sim_time, 'robot_description': Command(['xacro ', urdf])}],
                 arguments=[urdf]),
 
-            # Spawn robot
+            # Spawn robot in vineyard
             Node(
                 package='ros_gz_sim',
                 executable='create',
@@ -115,8 +125,7 @@ def generate_launch_description():
                         package='controller_manager',
                         executable='spawner',
                         arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
-                        # parameters=[{'use_sim_time': use_sim_time}],
-                parameters=[{'use_sim_time': True}],
+                        parameters=[{'use_sim_time': True}],
                         output='screen',
                     ),
 
@@ -125,15 +134,14 @@ def generate_launch_description():
                         package='controller_manager',
                         executable='spawner',
                         arguments=['diff_drive_controller', '--controller-manager', '/controller_manager'],
-                        # parameters=[{'use_sim_time': use_sim_time}],
-                parameters=[{'use_sim_time': True}],
+                        parameters=[{'use_sim_time': True}],
                         output='screen',
                     ),
                 ])
             ]
         ),
 
-        # Sensor Bridge Group (delayed to ensure clock is established)
+        # Enhanced Sensor Bridge Group for vineyard environment
         TimerAction(
             period=2.0,
             actions=[
@@ -151,12 +159,14 @@ def generate_launch_description():
                             '/rear_camera/image@sensor_msgs/msg/Image@gz.msgs.Image',
                             '/rear_camera/depth_image@sensor_msgs/msg/Image@gz.msgs.Image',
                             '/rear_camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
-                            '/imu@sensor_msgs/msg/Imu@gz.msgs.IMU'
+                            '/imu@sensor_msgs/msg/Imu@gz.msgs.IMU',
+                            '/gps@sensor_msgs/msg/NavSatFix@gz.msgs.NavSat'
                         ],
                         output='screen',
                         parameters=[{'use_sim_time': use_sim_time}],
                         remappings=[
-                            ('/scan', '/scan_raw')
+                            ('/scan', '/scan_raw'),
+                            ('/gps', '/fix')
                         ]
                     ),
 
@@ -169,20 +179,12 @@ def generate_launch_description():
                         parameters=[{'use_sim_time': use_sim_time}]
                     ),
 
-                    # Frame remapper for laser scan to use correct frame names
+                    # Transform publishers for vineyard-specific frames
                     Node(
                         package='tf2_ros',
                         executable='static_transform_publisher',
-                        name='gazebo_to_ros_frames',
-                        arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'vineyard_mower/base_link'],
-                        parameters=[{'use_sim_time': use_sim_time}]
-                    ),
-
-                    Node(
-                        package='tf2_ros',
-                        executable='static_transform_publisher',
-                        name='lidar_frame_bridge',
-                        arguments=['0', '0', '0', '0', '0', '0', 'lidar_link', 'vineyard_mower/base_link/lidar_link'],
+                        name='base_link_to_gps',
+                        arguments=['0', '0', '0.5', '0', '0', '0', 'base_link', 'gps_link'],
                         parameters=[{'use_sim_time': use_sim_time}]
                     ),
 
@@ -199,6 +201,15 @@ def generate_launch_description():
                         executable='static_transform_publisher',
                         name='base_link_to_rear_camera',
                         arguments=['-0.2', '0', '0.1', '0', '0', '3.14159', 'base_link', 'rear_camera_link'],
+                        parameters=[{'use_sim_time': use_sim_time}]
+                    ),
+
+                    # Vineyard-specific coordinate frame
+                    Node(
+                        package='tf2_ros',
+                        executable='static_transform_publisher',
+                        name='map_to_vineyard_frame',
+                        arguments=['0', '0', '0', '0', '0', '0', 'map', 'vineyard_frame'],
                         parameters=[{'use_sim_time': use_sim_time}]
                     ),
                 ])
@@ -241,7 +252,7 @@ def generate_launch_description():
                 condition=IfCondition(enable_teleop)
             ),
 
-            # Joy Teleoperation (if joystick connected)
+            # Joy Teleoperation
             Node(
                 package='joy',
                 executable='joy_node',
@@ -274,77 +285,115 @@ def generate_launch_description():
             ),
         ]),
 
-        # SLAM Group
+        # SLAM Group optimized for vineyard navigation
         GroupAction([
-            # Cartographer SLAM
+            # Cartographer SLAM with vineyard-specific configuration
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([
                     os.path.join(pkg_vineyard_mower_navigation, 'launch'),
                     '/slam.launch.py']),
-                launch_arguments={'use_sim_time': use_sim_time}.items(),
+                launch_arguments={
+                    'use_sim_time': use_sim_time,
+                    'configuration_directory': os.path.join(pkg_vineyard_mower_navigation, 'config', 'vineyard'),
+                    'configuration_basename': 'vineyard_slam.lua'
+                }.items(),
                 condition=IfCondition(enable_slam)
             ),
         ]),
 
-        # Navigation Group (Nav2) - Commented out until navigation.launch.py is created
+        # Vineyard Navigation Group (when ready)
         # GroupAction([
-        #     # Navigation2 Stack (when implemented)
+        #     # Navigation2 Stack configured for vineyard rows
         #     IncludeLaunchDescription(
         #         PythonLaunchDescriptionSource([
         #             os.path.join(pkg_vineyard_mower_navigation, 'launch'),
-        #             '/navigation.launch.py']),
-        #         launch_arguments={'use_sim_time': use_sim_time}.items(),
+        #             '/vineyard_navigation.launch.py']),
+        #         launch_arguments={
+        #             'use_sim_time': use_sim_time,
+        #             'map_file': os.path.join(pkg_vineyard_mower_navigation, 'maps', 'vineyard_map.yaml')
+        #         }.items(),
         #         condition=IfCondition(enable_navigation)
         #     ),
         # ]),
 
-        # Visualization Group
+        # Enhanced Visualization Group
         GroupAction([
-            # RViz with custom config
+            # RViz with vineyard-specific configuration
             Node(
                 package='rviz2',
                 executable='rviz2',
-                name='rviz2',
+                name='rviz2_vineyard',
                 output='screen',
-                arguments=['-d', os.path.join(pkg_vineyard_mower_navigation, 'config', 'slam.rviz')],
-                parameters=[{'use_sim_time': use_sim_time}],
-                condition=IfCondition(enable_rviz)
-            ),
-            Node(
-                package='rviz2',
-                executable='rviz2',
-                name='rviz2',
-                output='screen',
-                arguments=['-d', os.path.join(pkg_vineyard_mower_description, 'config', 'display.rviz')],
+                arguments=['-d', os.path.join(pkg_vineyard_mower_navigation, 'config', 'vineyard_simulation.rviz')],
                 parameters=[{'use_sim_time': use_sim_time}],
                 condition=IfCondition(enable_rviz)
             ),
         ]),
 
-        # Diagnostic and Monitoring Group
+        # Vineyard Environment Monitoring
         GroupAction([
-            # Robot diagnostic monitor
+            # Environment parameter server
+            Node(
+                package='vineyard_mower_gazebo',
+                executable='vineyard_environment_monitor.py',
+                name='vineyard_environment_monitor',
+                output='screen',
+                parameters=[{
+                    'use_sim_time': use_sim_time,
+                    'vineyard_config_file': os.path.join(pkg_vineyard_mower_gazebo, 'config', 'vineyard_config.yaml'),
+                    'current_season': vineyard_season,
+                    'weather_enabled': weather_enabled
+                }],
+            ),
+
+            # GPS reference point publisher
+            Node(
+                package='vineyard_mower_navigation',
+                executable='gps_reference_publisher.py',
+                name='gps_reference_publisher',
+                output='screen',
+                parameters=[{
+                    'use_sim_time': use_sim_time,
+                    'latitude': 45.5017,   # Example vineyard location
+                    'longitude': -122.6750,
+                    'altitude': 50.0
+                }],
+            ),
+
+            # Vineyard row detection node
+            Node(
+                package='vineyard_mower_navigation',
+                executable='vineyard_row_detector.py',
+                name='vineyard_row_detector',
+                output='screen',
+                parameters=[{
+                    'use_sim_time': use_sim_time,
+                    'row_spacing': 2.5,
+                    'detection_range': 10.0
+                }],
+                remappings=[
+                    ('/scan', '/scan'),
+                    ('/camera/image', '/front_camera/image')
+                ]
+            ),
+
+            # Diagnostic aggregator for vineyard operations
             Node(
                 package='diagnostic_aggregator',
                 executable='aggregator_node',
-                name='diagnostic_aggregator',
+                name='vineyard_diagnostic_aggregator',
                 parameters=[{
                     'analyzers.sensors.type': 'diagnostic_aggregator/GenericAnalyzer',
-                    'analyzers.sensors.path': 'Sensors',
+                    'analyzers.sensors.path': 'Vineyard Sensors',
                     'analyzers.sensors.find_and_remove_prefix': 'vineyard_mower',
-                    'analyzers.controls.type': 'diagnostic_aggregator/GenericAnalyzer',
-                    'analyzers.controls.path': 'Controls',
-                    'analyzers.controls.find_and_remove_prefix': 'diff_drive_controller',
+                    'analyzers.navigation.type': 'diagnostic_aggregator/GenericAnalyzer',
+                    'analyzers.navigation.path': 'Vineyard Navigation',
+                    'analyzers.navigation.find_and_remove_prefix': 'nav2',
+                    'analyzers.environment.type': 'diagnostic_aggregator/GenericAnalyzer',
+                    'analyzers.environment.path': 'Vineyard Environment',
+                    'analyzers.environment.find_and_remove_prefix': 'vineyard'
                 }],
                 output='screen'
-            ),
-
-            # Topic monitor for debugging
-            Node(
-                package='rqt_topic',
-                executable='rqt_topic',
-                name='topic_monitor',
-                condition=IfCondition(LaunchConfiguration('debug', default='false'))
             ),
         ]),
     ])
