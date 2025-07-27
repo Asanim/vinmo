@@ -49,11 +49,10 @@
         <!-- Main ground -->
         <collision name="ground_collision">
           <geometry>
-            <heightmap>
-              <uri>package://vineyard_mower_gazebo/models/terrain.png</uri>
-              <size>200 120 4</size>
-              <pos>0 0 0</pos>
-            </heightmap>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>200 120</size>
+            </plane>
           </geometry>
           <surface>
             <friction>
@@ -66,19 +65,18 @@
         </collision>
         <visual name="ground_visual">
           <geometry>
-            <heightmap>
-              <uri>package://vineyard_mower_gazebo/models/terrain.png</uri>
-              <size>200 120 4</size>
-              <pos>0 0 0</pos>
-              <texture>
-                <diffuse>package://vineyard_mower_gazebo/materials/textures/vineyard_soil.jpg</diffuse>
-                <normal>package://vineyard_mower_gazebo/materials/textures/vineyard_soil_normal.jpg</normal>
-                <size>50</size>
-              </texture>
-            </heightmap>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>200 120</size>
+            </plane>
           </geometry>
+          <material>
+            <ambient>0.4 0.3 0.2 1</ambient>
+            <diffuse>0.5 0.4 0.3 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
         </visual>
-        
+                
         <!-- Grass strips between rows -->
         <visual name="grass_strip_1">
           <pose>0 -8.75 0.01 0 0 0</pose>
@@ -193,116 +191,116 @@
       
       <!-- Posts along the row -->
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>0 0 1.0 0 0 0</pose>
         <name>post_1_1</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>8 0 1.0 0 0 0</pose>
         <name>post_1_2</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>16 0 1.0 0 0 0</pose>
         <name>post_1_3</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>24 0 1.0 0 0 0</pose>
         <name>post_1_4</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>32 0 1.0 0 0 0</pose>
         <name>post_1_5</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>40 0 1.0 0 0 0</pose>
         <name>post_1_6</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>48 0 1.0 0 0 0</pose>
         <name>post_1_7</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>56 0 1.0 0 0 0</pose>
         <name>post_1_8</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>64 0 1.0 0 0 0</pose>
         <name>post_1_9</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>72 0 1.0 0 0 0</pose>
         <name>post_1_10</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>80 0 1.0 0 0 0</pose>
         <name>post_1_11</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>88 0 1.0 0 0 0</pose>
         <name>post_1_12</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>96 0 1.0 0 0 0</pose>
         <name>post_1_13</name>
       </include>
       
       <!-- Vine plants -->
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>2 0 0 0 0 0</pose>
         <name>vine_1_1</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>4 0 0 0 0 0</pose>
         <name>vine_1_2</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>6 0 0 0 0 0</pose>
         <name>vine_1_3</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>10 0 0 0 0 0</pose>
         <name>vine_1_4</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>12 0 0 0 0 0</pose>
         <name>vine_1_5</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>14 0 0 0 0 0</pose>
         <name>vine_1_6</name>
       </include>
@@ -311,13 +309,13 @@
       
       <!-- Irrigation system -->
       <include>
-        <uri>model://irrigation_pipe</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
         <pose>25 -0.3 0 0 0 0</pose>
         <name>irrigation_1_1</name>
       </include>
       
       <include>
-        <uri>model://irrigation_pipe</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
         <pose>75 -0.3 0 0 0 0</pose>
         <name>irrigation_1_2</name>
       </include>
@@ -330,13 +328,13 @@
       
       <!-- Posts and plants similar to row 1 -->
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>0 0 1.0 0 0 0</pose>
         <name>post_2_1</name>
       </include>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>8 0 1.0 0 0 0</pose>
         <name>post_2_2</name>
       </include>
@@ -344,13 +342,13 @@
       <!-- Add more posts and plants as needed -->
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>2 0 0 0 0 0</pose>
         <name>vine_2_1</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>4 0 0 0 0 0</pose>
         <name>vine_2_2</name>
       </include>
@@ -362,13 +360,13 @@
       <pose>0 -5 0 0 0 0</pose>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>0 0 1.0 0 0 0</pose>
         <name>post_3_1</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>2 0 0 0 0 0</pose>
         <name>vine_3_1</name>
       </include>
@@ -380,13 +378,13 @@
       <pose>0 -2.5 0 0 0 0</pose>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>0 0 1.0 0 0 0</pose>
         <name>post_4_1</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>2 0 0 0 0 0</pose>
         <name>vine_4_1</name>
       </include>
@@ -398,13 +396,13 @@
       <pose>0 0 0 0 0 0</pose>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>0 0 1.0 0 0 0</pose>
         <name>post_5_1</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>2 0 0 0 0 0</pose>
         <name>vine_5_1</name>
       </include>
@@ -416,13 +414,13 @@
       <pose>0 2.5 0 0 0 0</pose>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>0 0 1.0 0 0 0</pose>
         <name>post_6_1</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>2 0 0 0 0 0</pose>
         <name>vine_6_1</name>
       </include>
@@ -434,13 +432,13 @@
       <pose>0 5 0 0 0 0</pose>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>0 0 1.0 0 0 0</pose>
         <name>post_7_1</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>2 0 0 0 0 0</pose>
         <name>vine_7_1</name>
       </include>
@@ -452,13 +450,13 @@
       <pose>0 7.5 0 0 0 0</pose>
       
       <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vineyard_post</uri>
         <pose>0 0 1.0 0 0 0</pose>
         <name>post_8_1</name>
       </include>
       
       <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>2 0 0 0 0 0</pose>
         <name>vine_8_1</name>
       </include>
@@ -466,14 +464,14 @@
 
     <!-- Storage Building -->
     <include>
-      <uri>model://storage_building</uri>
+      <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/storage_building</uri>
       <pose>-15 0 0 0 0 0</pose>
       <name>main_storage</name>
     </include>
 
     <!-- Equipment Shed -->
     <include>
-      <uri>model://storage_building</uri>
+      <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/storage_building</uri>
       <pose>-15 15 0 0 0 1.57</pose>
       <name>equipment_shed</name>
     </include>
