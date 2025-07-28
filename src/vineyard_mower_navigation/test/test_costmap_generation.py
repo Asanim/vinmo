@@ -305,7 +305,7 @@ class TestIntegration(unittest.TestCase):
 
 
 def create_test_suite():
-    """Create comprehensive test suite"""
+    """Create test suite"""
     suite = unittest.TestSuite()
     
     # Add test cases

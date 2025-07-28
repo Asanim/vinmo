@@ -1,7 +1,7 @@
 # Realistic Vineyard Simulation Environment
 
 ## Overview
-This comprehensive vineyard simulation provides a realistic testing environment for autonomous navigation systems in agricultural settings. The world includes structured vineyard rows, realistic terrain features, infrastructure, and environmental elements.
+This vineyard simulation provides a realistic testing environment for autonomous navigation systems in agricultural settings. The world includes structured vineyard rows, realistic terrain features, infrastructure, and environmental elements.
 
 ## Features Implemented
 

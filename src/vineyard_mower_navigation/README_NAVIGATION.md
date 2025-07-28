@@ -200,7 +200,7 @@ For specific vineyard conditions, you may need to adjust:
 
 ### Integration Testing
 ```bash
-# Run comprehensive navigation tests
+# Run navigation tests
 ros2 run vineyard_mower_navigation test_navigation_integration.py
 
 # Test specific components

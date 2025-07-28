@@ -1,6 +1,6 @@
 # Vineyard Simulation Environment
 
-This package provides a comprehensive and realistic vineyard simulation environment in Gazebo for testing autonomous navigation systems. The simulation includes detailed vineyard structures, terrain features, static obstacles, and environmental elements.
+This package provides a and realistic vineyard simulation environment in Gazebo for testing autonomous navigation systems. The simulation includes detailed vineyard structures, terrain features, static obstacles, and environmental elements.
 
 ## Features
 
@@ -48,7 +48,7 @@ vineyard_mower_gazebo/
 │   └── generate_vineyard_world.py    # World generation tool
 └── worlds/
     ├── vineyard.world                # Original simple world
-    └── realistic_vineyard.world      # Comprehensive vineyard world
+    └── realistic_vineyard.world      # vineyard world
 ```
 
 ## Quick Start

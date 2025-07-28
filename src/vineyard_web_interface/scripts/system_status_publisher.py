@@ -2,7 +2,7 @@
 """
 System Status Publisher
 
-Publishes comprehensive system status information to ROS topics for monitoring
+Publishes system status information to ROS topics for monitoring
 and web interface display.
 """
 
@@ -33,7 +33,7 @@ class SystemStatusPublisher(Node):
         self.get_logger().info('System Status Publisher started')
         
     def publish_status(self):
-        """Publish comprehensive system status"""
+        """Publish system status"""
         
         # Gather system information
         status_data = {

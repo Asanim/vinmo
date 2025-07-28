@@ -57,7 +57,7 @@ class PathVisualizer:
                       show_directions: bool = True,
                       save_path: Optional[str] = None) -> plt.Figure:
         """
-        Create a comprehensive visualization of the vineyard path
+        Create a visualization of the vineyard path
         
         Args:
             vineyard_path: Path to visualize

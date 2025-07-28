@@ -1,6 +1,6 @@
 # Vineyard Costmap Web Application
 
-A comprehensive React-based web application for managing vineyard costmap generation, integrating with ROS2 costmap services for satellite imagery processing and navigation.
+A React-based web application for managing vineyard costmap generation, integrating with ROS2 costmap services for satellite imagery processing and navigation.
 
 ## Features
 

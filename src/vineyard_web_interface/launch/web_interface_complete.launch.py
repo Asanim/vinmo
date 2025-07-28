@@ -2,7 +2,7 @@
 """
 Complete Vineyard Web Interface with Simulation Launch Script
 
-This comprehensive launch script starts the complete vineyard management system including:
+This launch script starts the complete vineyard management system including:
 - Gazebo vineyard simulation
 - Robot navigation stack
 - Costmap generation and path planning services

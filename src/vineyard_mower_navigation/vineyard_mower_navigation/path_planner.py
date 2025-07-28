@@ -151,7 +151,7 @@ class PathPlanningConfig:
 
 class VineyardPathPlanner:
     """
-    Comprehensive path planning system for vineyard coverage
+    path planning system for vineyard coverage
     """
     
     def __init__(self, config: Optional[PathPlanningConfig] = None):
