@@ -10,8 +10,16 @@ find_package(ament_cmake REQUIRED)
 
 # Install directories
 install(
-  DIRECTORY launch worlds
+  DIRECTORY launch worlds models config materials
   DESTINATION share/${PROJECT_NAME}
+)
+
+# Install scripts
+install(
+  PROGRAMS
+    scripts/vineyard_environment_monitor.py
+    scripts/generate_vineyard_world.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

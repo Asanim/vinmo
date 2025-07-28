@@ -1,0 +1,113 @@
+# Vineyard Configuration Parameters
+# This file contains configurable parameters for the vineyard simulation
+
+# Vineyard Dimensions
+vineyard:
+  # Number of vineyard rows
+  num_rows: 8
+  
+  # Distance between rows (meters)
+  row_spacing: 2.5
+  
+  # Length of each row (meters)
+  row_length: 100.0
+  
+  # Width of headland areas at row ends (meters)
+  headland_width: 8.0
+  
+  # Distance between vine plants within a row (meters)
+  plant_spacing: 1.5
+  
+  # Height variation for terrain (meters)
+  terrain_variation: 0.2
+  
+  # Slope of the vineyard (degrees)
+  slope: 2.0
+
+# Environmental Settings
+environment:
+  # Ambient light settings (0.0 to 1.0)
+  ambient_light: 0.4
+  
+  # Background color (R G B A)
+  background_color: [0.7, 0.8, 0.9, 1.0]
+  
+  # Enable shadows
+  shadows: true
+  
+  # Wind effects (if applicable)
+  wind_enabled: false
+  wind_speed: 2.0  # m/s
+
+# Seasonal Variations
+seasons:
+  # Current season: spring, summer, autumn, winter
+  current_season: "summer"
+  
+  # Foliage density multiplier by season
+  foliage_density:
+    spring: 0.6
+    summer: 1.0
+    autumn: 0.8
+    winter: 0.2
+  
+  # Grape presence by season
+  grape_presence:
+    spring: false
+    summer: true
+    autumn: true
+    winter: false
+
+# Infrastructure
+infrastructure:
+  # Post spacing along rows (meters)
+  post_spacing: 8.0
+  
+  # Number of trellis wire levels
+  trellis_levels: 3
+  
+  # Irrigation system
+  irrigation_enabled: true
+  irrigation_spacing: 5.0  # meters between irrigation points
+  
+  # Buildings and structures
+  storage_buildings: 1
+  equipment_sheds: 2
+  
+  # Access gates
+  gate_locations: [[50, -12], [50, 22]]  # [x, y] coordinates
+
+# Terrain and Ground
+terrain:
+  # Ground material types
+  ground_materials:
+    - name: "soil"
+      color: [0.4, 0.3, 0.2, 1.0]
+      friction: 0.8
+    - name: "grass"
+      color: [0.3, 0.6, 0.3, 1.0]
+      friction: 0.7
+    - name: "gravel"
+      color: [0.6, 0.6, 0.5, 1.0]
+      friction: 0.9
+  
+  # Texture variations
+  texture_scale: 10.0
+  
+  # Weed areas between rows
+  weed_coverage: 0.3  # 30% coverage
+
+# Navigation Markers
+navigation:
+  # GPS reference points
+  gps_markers:
+    - name: "start_point"
+      position: [0, 0, 0]
+    - name: "row_1_start"
+      position: [0, -10, 0]
+    - name: "row_1_end"
+      position: [100, -10, 0]
+  
+  # Visual markers for navigation
+  visual_markers_enabled: true
+  marker_spacing: 25.0  # meters
