@@ -1,0 +1,99 @@
+# Path Planning Configuration
+# Configuration parameters for vineyard coverage path planning
+
+# Vehicle constraints
+vehicle:
+  width: 1.5                    # meters
+  length: 2.0                   # meters
+  min_turning_radius: 2.0       # meters
+  max_velocity: 2.0             # m/s
+  min_velocity: 0.5             # m/s
+
+# Coverage parameters
+coverage:
+  row_spacing: 2.5              # meters between rows
+  overlap_percentage: 0.1       # 10% overlap between coverage passes
+  gap_tolerance: 0.5            # meters - acceptable gap in coverage
+  headland_width: 5.0           # meters - turning area width
+  waypoint_density: 1.0         # waypoints per meter
+
+# Path optimization
+optimization:
+  optimize_for_time: true       # Optimize for time vs distance
+  avoid_obstacles: true         # Enable obstacle avoidance
+  smooth_turns: true            # Apply turn smoothing
+  
+  # Cost weights for multi-objective optimization
+  weights:
+    distance: 1.0               # Distance minimization weight
+    time: 1.5                   # Time minimization weight
+    obstacle: 3.0               # Obstacle avoidance weight
+    smoothness: 0.5             # Path smoothness weight
+
+# Turn parameters
+turns:
+  preferred_turn_type: "u_turn" # u_turn, omega_turn, straight_through
+  turn_speed_factor: 0.5        # Velocity reduction factor for turns
+  min_turn_radius_factor: 1.2   # Safety factor for minimum turning radius
+
+# Pattern generation
+patterns:
+  default_pattern: "boustrophedon"  # boustrophedon, parallel, spiral
+  direction_alternating: true       # Alternate direction between rows
+  start_from_edge: true            # Start coverage from vineyard edge
+
+# Advanced settings
+advanced:
+  use_costmap_data: true        # Integrate with costmap for obstacle avoidance
+  dynamic_replanning: true      # Enable dynamic path replanning
+  validate_paths: true          # Validate generated paths before execution
+  
+  # Tolerance settings
+  tolerances:
+    position: 0.2               # meters - position tolerance
+    orientation: 0.1            # radians - orientation tolerance
+    velocity: 0.1               # m/s - velocity tolerance
+
+# Vineyard specific parameters
+vineyard:
+  typical_row_length: 100.0     # meters - typical vineyard row length
+  typical_vineyard_width: 50.0  # meters - typical vineyard width
+  slope_consideration: true     # Consider terrain slope in planning
+  seasonal_adjustments: false   # Enable seasonal planning adjustments
+
+# Output settings
+output:
+  save_paths: true              # Save generated paths to file
+  save_directory: "/tmp/vineyard_paths/"
+  include_metadata: true        # Include planning metadata in output
+  export_formats: ["json", "csv"]  # Export formats for paths
+
+# Visualization
+visualization:
+  enable_live_visualization: true
+  show_waypoints: true
+  show_directions: true
+  show_turn_types: true
+  color_by_velocity: false
+  animation_speed: 100          # milliseconds per frame
+
+# Performance settings
+performance:
+  max_waypoints_per_segment: 1000
+  planning_timeout: 30.0        # seconds
+  optimization_iterations: 100
+  parallel_processing: true
+
+# Safety settings
+safety:
+  emergency_stop_distance: 2.0  # meters
+  obstacle_buffer_distance: 1.0 # meters
+  maximum_slope: 0.3            # radians (~17 degrees)
+  minimum_clearance: 0.5        # meters
+
+# Integration settings
+integration:
+  costmap_topic: "/global_costmap"
+  path_topic: "/planned_path"
+  visualization_topic: "/path_visualization"
+  status_topic: "/path_planning_status"

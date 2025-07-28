@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: vineyard_costmap
+      POSTGRES_USER: vineyard_user
+      POSTGRES_PASSWORD: vineyard_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - vineyard_network
+
+  # Redis for session management and caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - vineyard_network
+
+  # Backend API Server
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://vineyard_user:vineyard_pass@postgres:5432/vineyard_costmap
+      - REDIS_URL=redis://redis:6379
+      - ROS_DOMAIN_ID=0
+    volumes:
+      - ./backend:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - vineyard_network
+    stdin_open: true
+    tty: true
+
+  # Frontend React App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_WS_URL=ws://localhost:9090
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - vineyard_network
+
+  # ROSbridge WebSocket Server
+  rosbridge:
+    image: ros:jazzy-ros-base
+    command: >
+      bash -c "
+        source /opt/ros/jazzy/setup.bash &&
+        apt-get update &&
+        apt-get install -y ros-jazzy-rosbridge-suite &&
+        ros2 launch rosbridge_server rosbridge_websocket_launch.xml port:=9090
+      "
+    ports:
+      - "9090:9090"
+    networks:
+      - vineyard_network
+    environment:
+      - ROS_DOMAIN_ID=0
+
+volumes:
+  postgres_data:
+
+networks:
+  vineyard_network:
+    driver: bridge
