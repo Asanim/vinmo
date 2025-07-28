@@ -3,7 +3,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, GroupAction, TimerAction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, GroupAction, TimerAction, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
@@ -34,6 +34,12 @@ def generate_launch_description():
     weather_enabled = LaunchConfiguration('weather_enabled', default='false')
 
     return LaunchDescription([
+        # Set Gazebo model path
+        SetEnvironmentVariable(
+            name='GZ_SIM_RESOURCE_PATH',
+            value=os.path.join(pkg_vineyard_mower_gazebo, 'models')
+        ),
+
         # Launch Arguments
         DeclareLaunchArgument(
             'use_sim_time',
