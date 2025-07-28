@@ -50,11 +50,11 @@ docker-compose up -d
 ```bash
 # Start frontend development server
 cd frontend
-npm start
+npm run dev
 
 # Start backend development server
-cd backend
-python app.py
+cd backend/src
+python main.py
 
 # Start ROS2 bridge
 ros2 launch rosbridge_server rosbridge_websocket_launch.xml

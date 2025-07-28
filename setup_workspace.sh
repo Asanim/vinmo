@@ -27,8 +27,7 @@ first_install() {
     sudo apt install -y ros-jazzy-cartographer ros-jazzy-cartographer-ros ros-jazzy-cartographer-ros-msgs ros-jazzy-cartographer-rviz
 
     sudo apt install -y ros-jazzy-twist-stamper
-    gz sim --help
-
+    sudo apt  install docker-compose
 }
 
 first_install
