@@ -1,0 +1,64 @@
+# Web Interface Configuration
+# Configuration for the vineyard web interface system
+
+web_interface:
+  # Server configuration
+  servers:
+    rosbridge:
+      port: 9090
+      address: "0.0.0.0"
+      retry_startup_delay: 5
+      fragment_timeout: 600
+      unregister_timeout: 10.0
+      
+    backend:
+      port: 8000
+      host: "0.0.0.0"
+      debug: false
+      cors_origins: ["http://localhost:3000", "http://localhost:3001"]
+      
+    frontend:
+      port: 3000
+      host: "0.0.0.0"
+      
+  # Database configuration
+  database:
+    url: "postgresql://vineyard_user:vineyard_pass@localhost:5432/vineyard_costmap"
+    pool_size: 10
+    pool_timeout: 30
+    
+  # Authentication configuration
+  auth:
+    secret_key: "your-secret-key-here"  # Change in production
+    algorithm: "HS256"
+    access_token_expire_minutes: 720
+    
+  # File upload configuration
+  uploads:
+    max_file_size: 50  # MB
+    allowed_extensions: [".jpg", ".jpeg", ".png", ".tiff", ".tif"]
+    upload_path: "/tmp/vineyard_uploads"
+    
+  # Monitoring configuration
+  monitoring:
+    health_check_interval: 10.0  # seconds
+    system_status_interval: 5.0   # seconds
+    enable_diagnostics: true
+    
+  # ROS integration
+  ros:
+    use_sim_time: true
+    domain_id: 0
+    services:
+      costmap_generation: "/costmap/generate_costmap"
+      costmap_update: "/costmap/update_costmap_layer"
+      costmap_info: "/costmap/get_costmap_info"
+      path_planning: "/path_planning/plan_path"
+      
+  # Web interface features
+  features:
+    enable_batch_processing: true
+    enable_parameter_presets: true
+    enable_mission_planning: true
+    enable_real_time_updates: true
+    enable_export_functions: true

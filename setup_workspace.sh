@@ -28,6 +28,9 @@ first_install() {
 
     sudo apt install -y ros-jazzy-twist-stamper
     sudo apt  install docker-compose
+
+    sudo systemctl enable docker.service
+    sudo systemctl enable containerd.service
 }
 
 first_install
