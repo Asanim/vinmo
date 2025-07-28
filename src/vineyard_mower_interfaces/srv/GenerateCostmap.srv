@@ -1,0 +1,16 @@
+# Request
+float64 center_latitude
+float64 center_longitude
+int32 zoom_level
+bool use_local_image
+string image_path
+
+---
+
+# Response
+bool success
+string message
+nav_msgs/OccupancyGrid costmap
+int32 rows_detected
+int32 obstacles_detected
+float64 row_spacing

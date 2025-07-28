@@ -1,0 +1,17 @@
+# Request
+# Empty request
+
+---
+
+# Response
+bool has_costmap
+uint32 width
+uint32 height
+float64 resolution
+float64 origin_x
+float64 origin_y
+string frame_id
+int32 rows_detected
+int32 obstacles_detected
+float64 row_spacing
+bool auto_update_enabled

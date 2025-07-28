@@ -10,7 +10,7 @@ find_package(ament_cmake REQUIRED)
 
 # Install directories
 install(
-  DIRECTORY launch config maps scripts
+  DIRECTORY launch config maps scripts vineyard_mower_navigation test
   DESTINATION share/${PROJECT_NAME}
 )
 
@@ -21,7 +21,16 @@ install(
     scripts/gps_reference_publisher.py
     scripts/vineyard_row_detector.py
     scripts/test_navigation_integration.py
+    scripts/test_costmap_client.py
+    scripts/generate_test_images.py
   DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install Python modules
+install(
+  DIRECTORY vineyard_mower_navigation/
+  DESTINATION lib/python3/dist-packages/vineyard_mower_navigation
+  FILES_MATCHING PATTERN "*.py"
 )
 
 if(BUILD_TESTING)

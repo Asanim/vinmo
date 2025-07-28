@@ -1,0 +1,59 @@
+# Costmap Generation Configuration
+# This file contains parameters for satellite imagery processing and costmap generation
+
+# Costmap dimensions and resolution
+resolution: 0.1  # meters per pixel
+width: 1000      # cells
+height: 1000     # cells
+origin_x: 0.0    # meters
+origin_y: 0.0    # meters
+origin_z: 0.0    # meters
+frame_id: "map"
+
+# Cost values (0-100, where 100 is obstacle)
+free_space_cost: 0
+vine_row_cost: 90
+obstacle_cost: 100
+headland_cost: 30
+unknown_cost: 50
+
+# Inflation parameters
+inflation_radius: 1.0         # meters
+cost_scaling_factor: 10.0
+
+# Vineyard detection parameters
+vineyard_detection:
+  hough_threshold: 50
+  hough_min_line_length: 100
+  hough_max_line_gap: 20
+  canny_low_threshold: 50
+  canny_high_threshold: 150
+  morphology_kernel_size: 5
+  min_row_length: 50          # meters
+  max_row_spacing: 5.0        # meters
+  angle_tolerance: 0.17       # ~10 degrees in radians
+  pixel_to_meter_ratio: 0.1   # Default ratio, should be calibrated
+
+# Image preprocessing parameters
+image_preprocessing:
+  enhance_contrast: true
+  gaussian_blur: true
+  bilateral_filter: true
+  
+# Satellite imagery parameters
+satellite:
+  default_zoom: 18
+  image_size_width: 640
+  image_size_height: 640
+  maptype: "satellite"  # satellite, hybrid, roadmap, terrain
+
+# Auto-update settings
+auto_update:
+  enabled: false
+  rate: 30.0  # seconds
+  
+# Saving and logging
+saving:
+  save_costmaps: true
+  save_detections: true
+  save_path: "/tmp/costmaps/"

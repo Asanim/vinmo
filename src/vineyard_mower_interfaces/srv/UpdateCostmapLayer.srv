@@ -1,0 +1,11 @@
+# Request
+string layer_name
+uint32 width
+uint32 height
+uint8[] layer_data
+
+---
+
+# Response
+bool success
+string message
