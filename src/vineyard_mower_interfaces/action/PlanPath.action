@@ -1,0 +1,27 @@
+# Goal
+bool use_satellite_imagery
+float64 center_latitude
+float64 center_longitude
+int32 zoom_level
+bool use_local_image
+string image_path
+float64 row_spacing
+bool optimize_path
+geometry_msgs/Point[] vineyard_boundary
+
+---
+
+# Result
+bool success
+string message
+nav_msgs/Path path
+float64 total_distance
+float64 total_time
+float64 coverage_percentage
+int32 num_waypoints
+
+---
+
+# Feedback
+string status
+int32 progress

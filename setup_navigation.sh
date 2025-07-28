@@ -15,6 +15,13 @@ if [ ! -f "src/vineyard_mower_navigation/package.xml" ]; then
     exit 1
 fi
 
+install_examples () {
+    sudo apt install ros-jazzy-navigation2
+    sudo apt install ros-jazzy-nav2-bringup
+    sudo apt install ros-jazzy-nav2-minimal-tb*
+}
+
+
 # Install Nav2 dependencies
 echo -e "${YELLOW}Installing Navigation2 dependencies...${NC}"
 sudo apt update
