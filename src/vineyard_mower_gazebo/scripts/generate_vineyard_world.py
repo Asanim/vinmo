@@ -22,6 +22,7 @@ class VineyardWorldGenerator:
     def __init__(self, config_file=None, base_world_file=None):
         self.config = self.load_config(config_file)
         self.base_world_file = base_world_file or self.find_base_world_file()
+        self.models_path = self.find_models_path()
         
     def find_base_world_file(self):
         """Find the base world file with all infrastructure"""
@@ -30,6 +31,12 @@ class VineyardWorldGenerator:
         if world_file.exists():
             return str(world_file)
         return None
+    
+    def find_models_path(self):
+        """Find the absolute path to the models directory"""
+        script_dir = Path(__file__).parent
+        models_dir = script_dir.parent / "models"
+        return str(models_dir.absolute())
         
     def load_config(self, config_file):
         """Load configuration from file or use defaults"""
@@ -100,6 +107,7 @@ class VineyardWorldGenerator:
         # Pattern to match vineyard row models and their includes
         patterns_to_remove = [
             r'<!--.*?Vineyard Row.*?-->.*?</model>\s*',
+            r'<!--.*?Generated Vineyard Rows.*?-->.*?<!--.*?End Generated Vineyard Rows.*?-->\s*',
             r'<model name="vineyard_row_\d+".*?</model>\s*',
             r'<!--.*?vineyard.*?row.*?-->.*?(?=<!--|\s*<model|\s*</world>)',
             r'<include>.*?vineyard_post.*?</include>\s*',
@@ -169,7 +177,7 @@ class VineyardWorldGenerator:
             x_pos = post_num * post_spacing
             if x_pos <= row_length:
                 posts_xml += f'''      <include>
-        <uri>model://vineyard_post</uri>
+        <uri>model://{self.models_path}/vineyard_post</uri>
         <pose>{x_pos} 0 1.0 0 0 0</pose>
         <name>post_{row_num + 1}_{post_num + 1}</name>
       </include>
@@ -186,7 +194,7 @@ class VineyardWorldGenerator:
             x_pos = plant_num * plant_spacing + plant_spacing/2
             if x_pos <= row_length:
                 plants_xml += f'''      <include>
-        <uri>model://vine_plant</uri>
+        <uri>model://{self.models_path}/vine_plant</uri>
         <pose>{x_pos} 0 0 0 0 0</pose>
         <name>vine_{row_num + 1}_{plant_num + 1}</name>
       </include>
@@ -203,7 +211,7 @@ class VineyardWorldGenerator:
             x_pos = irr_num * irrigation_spacing + irrigation_spacing/2
             if x_pos <= row_length:
                 irrigation_xml += f'''      <include>
-        <uri>model://irrigation_pipe</uri>
+        <uri>model://{self.models_path}/irrigation_pipe</uri>
         <pose>{x_pos} -0.3 0 0 0 0</pose>
         <name>irrigation_{row_num + 1}_{irr_num + 1}</name>
       </include>
@@ -610,7 +618,7 @@ class VineyardWorldGenerator:
                 infrastructure_xml += f'''
     <!-- Storage Building {i+1} -->
     <include>
-      <uri>model://storage_building</uri>
+      <uri>model://{self.models_path}/storage_building</uri>
       <pose>{x_pos} {y_pos} 0 0 0 0</pose>
       <name>storage_building_{i+1}</name>
     </include>
@@ -624,7 +632,7 @@ class VineyardWorldGenerator:
                 infrastructure_xml += f'''
     <!-- Equipment Shed {i+1} -->
     <include>
-      <uri>model://storage_building</uri>
+      <uri>model://{self.models_path}/storage_building</uri>
       <pose>{x_pos} {y_pos} 0 0 0 1.57</pose>
       <name>equipment_shed_{i+1}</name>
     </include>
