@@ -23,8 +23,19 @@ install(
     scripts/test_navigation_integration.py
     scripts/test_costmap_client.py
     scripts/generate_test_images.py
+    scripts/costmap_publisher.py
+    scripts/costmap_service.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
+# Install Python scripts
+install(
+  PROGRAMS 
+    scripts/costmap_publisher.py
+    scripts/costmap_service.py
+  DESTINATION bin/${PROJECT_NAME}
+)
+
 
 # Install Python modules
 install(
