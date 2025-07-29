@@ -31,6 +31,8 @@ first_install() {
 
     sudo systemctl enable docker.service
     sudo systemctl enable containerd.service
+
+    sudo apt install ros-jazzy-rosbridge-*
 }
 
 first_install

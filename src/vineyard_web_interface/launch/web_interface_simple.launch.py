@@ -24,17 +24,12 @@ from launch.conditions import IfCondition
 
 def generate_launch_description():
     # Get package directories
-    pkg_vineyard_web_interface = get_package_share_directory('vineyard_web_interface')
     pkg_vineyard_mower_navigation = get_package_share_directory('vineyard_mower_navigation')
 
     # Launch configuration variables
     enable_frontend = LaunchConfiguration('enable_frontend', default='true')
     enable_backend = LaunchConfiguration('enable_backend', default='true')
     rosbridge_port = LaunchConfiguration('rosbridge_port', default='9090')
-    backend_port = LaunchConfiguration('backend_port', default='8000')
-    frontend_port = LaunchConfiguration('frontend_port', default='3000')
-    web_app_path = LaunchConfiguration('web_app_path', 
-                                     default='/home/sam/vinmo/vineyard_costmap_web')
 
     return LaunchDescription([
         # Launch Arguments
@@ -86,23 +81,22 @@ def generate_launch_description():
                     'retry_startup_delay': 5,
                     'fragment_timeout': 600,
                     'delay_between_messages': 0,
-                    'max_message_size': None,
                     'unregister_timeout': 10.0
                 }],
                 output='screen'
             ),
             
             # ROSbridge TCP Server (alternative connection method)
-            Node(
-                package='rosbridge_server',
-                executable='rosbridge_tcp',
-                name='rosbridge_tcp',
-                parameters=[{
-                    'port': 9091,
-                    'address': '0.0.0.0'
-                }],
-                output='screen'
-            ),
+            # Node(
+            #     package='rosbridge_server',
+            #     executable='rosbridge_tcp',
+            #     name='rosbridge_tcp',
+            #     parameters=[{
+            #         'port': 9091,
+            #         'address': '0.0.0.0'
+            #     }],
+            #     output='screen'
+            # ),
         ]),
 
         # Costmap Services Group
@@ -142,35 +136,30 @@ def generate_launch_description():
         ExecuteProcess(
             condition=IfCondition(enable_backend),
             cmd=[
-                'python3',
-                PathJoinSubstitution([web_app_path, 'backend', 'src', 'main.py'])
+                'bash', '-c',
+                'cd /home/sam/vinmo/vineyard_costmap_web/backend && python3 src/main.py'
             ],
-            cwd=PathJoinSubstitution([web_app_path, 'backend']),
             output='screen',
             name='backend_server',
-            env={'PORT': backend_port}
+            env={'PORT': '8000'}
         ),
 
         # Frontend Development Server
         ExecuteProcess(
             condition=IfCondition(enable_frontend),
-            cmd=['npm', 'run', 'dev', '--', '--port', frontend_port, '--host', '0.0.0.0'],
-            cwd=PathJoinSubstitution([web_app_path, 'frontend']),
+            cmd=[
+                'bash', '-c', 
+                'cd /home/sam/vinmo/vineyard_costmap_web/frontend && npm run dev -- --port 3000 --host 0.0.0.0'
+            ],
             output='screen',
             name='frontend_server'
         ),
 
         # Web Interface Monitor (simple status checker)
-        ExecuteProcess(
-            cmd=[
-                'python3',
-                PathJoinSubstitution([
-                    pkg_vineyard_web_interface,
-                    'scripts',
-                    'web_interface_monitor.py'
-                ])
-            ],
-            output='screen',
-            name='web_interface_monitor'
+        Node(
+            package='vineyard_web_interface',
+            executable='web_interface_monitor.py',
+            name='web_interface_monitor',
+            output='screen'
         ),
     ])
