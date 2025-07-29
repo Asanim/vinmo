@@ -1,16 +1,16 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Launch file for costmap generation system
 """
 
 import os
+import sys
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, LogInfo
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
-
 
 def generate_launch_description():
     # Package directory
@@ -64,11 +64,11 @@ def generate_launch_description():
         default_value='/tmp/costmaps/',
         description='Directory to save costmaps'
     )
-    
-    # Costmap service node
+
+    # Costmap service node - use wrapper script
     costmap_service_node = Node(
         package='vineyard_mower_navigation',
-        executable='costmap_service',
+        executable='costmap_service.py',
         name='costmap_service',
         output='screen',
         parameters=[{
@@ -82,11 +82,11 @@ def generate_launch_description():
             'costmap_save_path': LaunchConfiguration('save_path')
         }]
     )
-    
-    # Costmap publisher node (separate for global/local costmaps)
+
+    # Costmap publisher node - use wrapper script
     costmap_publisher_node = Node(
         package='vineyard_mower_navigation',
-        executable='costmap_publisher',
+        executable='costmap_publisher.py',
         name='costmap_publisher',
         output='screen',
         parameters=[{

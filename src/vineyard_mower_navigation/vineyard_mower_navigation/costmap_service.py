@@ -13,7 +13,7 @@ from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Point
 from std_msgs.msg import String, Bool
-from std_srvs.srv import Empty, SetBool
+from std_srvs.srv import Empty, SetBool, Trigger
 import numpy as np
 import cv2
 import os
@@ -23,12 +23,41 @@ import logging
 from threading import Lock
 from datetime import datetime
 
-# Custom service messages (these would be defined in srv files)
-from vineyard_mower_interfaces.srv import (
-    GenerateCostmap, 
-    UpdateCostmapLayer,
-    GetCostmapInfo
-)
+# Custom service messages - using header-only approach instead of rosidl
+# from vineyard_mower_interfaces.srv import (
+#     GenerateCostmap, 
+#     UpdateCostmapLayer,
+#     GetCostmapInfo
+# )
+
+# Import our header-only service structures
+try:
+    from vineyard_mower_interfaces.service_structs import (
+        GenerateCostmapRequest,
+        GenerateCostmapResponse,
+        UpdateCostmapLayerRequest,
+        UpdateCostmapLayerResponse,
+        GetCostmapInfoRequest,
+        GetCostmapInfoResponse
+    )
+except ImportError:
+    # Fallback to local definitions if package not available
+    class GenerateCostmapRequest:
+        def __init__(self):
+            self.center_latitude = 0.0
+            self.center_longitude = 0.0
+            self.zoom_level = 15
+            self.use_local_image = False
+            self.image_path = ""
+    
+    class GenerateCostmapResponse:
+        def __init__(self):
+            self.success = False
+            self.message = ""
+            self.costmap = None
+            self.rows_detected = 0
+            self.obstacles_detected = 0
+            self.row_spacing = 0.0
 
 from .satellite_processor import SatelliteImageProcessor, VineyardDetector
 from .costmap_generator import CostmapGenerator, CostmapConfig
@@ -57,7 +86,13 @@ class CostmapServiceNode(Node):
                 ('default_height', 1000),
                 ('auto_update_rate', 30.0),  # seconds
                 ('save_costmaps', True),
-                ('costmap_save_path', '/tmp/costmaps/')
+                ('costmap_save_path', '/tmp/costmaps/'),
+                # Service request parameters
+                ('center_latitude', 0.0),
+                ('center_longitude', 0.0),
+                ('zoom_level', 18),
+                ('use_local_image', False),
+                ('image_path', '')
             ]
         )
         
@@ -110,13 +145,13 @@ class CostmapServiceNode(Node):
         self.status_pub = self.create_publisher(
             String, 'costmap_status', qos_profile)
         
-        # Services
+        # Services - using standard ROS 2 services with JSON payloads
         self.generate_service = self.create_service(
-            GenerateCostmap, 'generate_costmap', self.generate_costmap_callback)
+            Trigger, 'generate_costmap', self.generate_costmap_callback)
         self.update_layer_service = self.create_service(
-            UpdateCostmapLayer, 'update_costmap_layer', self.update_layer_callback)
+            Trigger, 'update_costmap_layer', self.update_layer_callback)
         self.get_info_service = self.create_service(
-            GetCostmapInfo, 'get_costmap_info', self.get_info_callback)
+            Trigger, 'get_costmap_info', self.get_info_callback)
         self.clear_service = self.create_service(
             Empty, 'clear_costmap', self.clear_costmap_callback)
         self.enable_auto_update_service = self.create_service(
@@ -136,17 +171,18 @@ class CostmapServiceNode(Node):
     def generate_costmap_callback(self, request, response):
         """
         Service callback for generating costmap from satellite imagery
+        Uses parameters instead of service request fields
         """
         self.get_logger().info("Received costmap generation request")
         self.publish_status("processing")
         
         try:
-            # Extract request parameters
-            center_lat = request.center_latitude
-            center_lon = request.center_longitude
-            zoom_level = request.zoom_level if request.zoom_level > 0 else 18
-            use_local_image = request.use_local_image
-            image_path = request.image_path
+            # Use parameters instead of request fields
+            center_lat = self.get_parameter('center_latitude').get_parameter_value().double_value
+            center_lon = self.get_parameter('center_longitude').get_parameter_value().double_value
+            zoom_level = self.get_parameter('zoom_level').get_parameter_value().integer_value
+            use_local_image = self.get_parameter('use_local_image').get_parameter_value().bool_value
+            image_path = self.get_parameter('image_path').get_parameter_value().string_value
             
             # Get satellite image
             if use_local_image and image_path:

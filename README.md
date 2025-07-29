@@ -2,6 +2,13 @@
 
 A ROS2-based differential drive robot designed for autonomous vineyard mowing operations.
 
+## Notes
+
+update python path to find packages...
+PYTHONPATH=/opt/ros/jazzy/lib/python3.12/site-packages:/home/sam/vinmo/install/vineyard_mower_navigation/lib/python3/dist-packages/
+
+
+
 ## Project Structure
 
 ```text

@@ -15,6 +15,15 @@ setup(
         (share_prefix + package_name, ['package.xml']),
         (share_prefix + package_name + '/launch', ['launch/costmap_generation.launch.py']),
         (share_prefix + package_name + '/config', ['config/costmap_config.yaml']),
+        ('lib/' + package_name, [
+            'scripts/gps_reference_publisher.py',
+            'scripts/laser_scan_frame_remapper.py', 
+            'scripts/test_costmap_client.py',
+            'scripts/test_navigation_integration.py',
+            'scripts/test_system_integration.py',
+            'scripts/vineyard_row_detector.py',
+            'scripts/generate_test_images.py'
+        ]),
     ],
     install_requires=[
         'setuptools',
@@ -34,8 +43,6 @@ setup(
         'console_scripts': [
             'costmap_service = vineyard_mower_navigation.costmap_service:main',
             'costmap_publisher = vineyard_mower_navigation.costmap_generator:main',
-            'test_costmap_client = scripts.test_costmap_client:main',
-            'generate_test_images = scripts.generate_test_images:main',
         ],
     },
 )
