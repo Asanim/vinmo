@@ -55,7 +55,7 @@ services:
       - "3000:3000"
     environment:
       - VITE_API_URL=http://localhost:8000
-      - VITE_WS_URL=ws://localhost:9090
+      - VITE_WS_URL=ws://localhost:9091
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -72,10 +72,10 @@ services:
         source /opt/ros/jazzy/setup.bash &&
         apt-get update &&
         apt-get install -y ros-jazzy-rosbridge-suite &&
-        ros2 launch rosbridge_server rosbridge_websocket_launch.xml port:=9090
+        ros2 launch rosbridge_server rosbridge_websocket_launch.xml port:=9091
       "
     ports:
-      - "9090:9090"
+      - "9091:9091"
     networks:
       - vineyard_network
     environment:

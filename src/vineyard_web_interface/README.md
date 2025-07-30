@@ -35,7 +35,7 @@ ros2 launch vineyard_web_interface web_interface_simple.launch.py rosbridge_port
 
 ### 2. Complete Web Interface (`web_interface_complete.launch.py`)
 
-Comprehensive launch script that includes the full simulation environment.
+launch script that includes the full simulation environment.
 
 **Components Started:**
 - Complete Gazebo vineyard simulation
@@ -93,7 +93,7 @@ Monitors health of web interface components:
 
 ### System Status Publisher (`scripts/system_status_publisher.py`)
 
-Publishes comprehensive system information:
+Publishes system information:
 - System resources (CPU, memory, disk)
 - ROS service availability
 - Process status

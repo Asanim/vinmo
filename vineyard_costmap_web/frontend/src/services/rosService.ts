@@ -12,7 +12,7 @@ class ROSService {
   }
 
   connect() {
-    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:9090';
+    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:9091';
     
     try {
       this.ros = new ROSLIB.Ros({
