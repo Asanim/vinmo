@@ -33,6 +33,8 @@ first_install() {
     sudo systemctl enable containerd.service
 
     sudo apt install ros-jazzy-rosbridge-*
+    pip install psutil bson argcomplete
+    pip install pymongo tornado
 }
 
 first_install
