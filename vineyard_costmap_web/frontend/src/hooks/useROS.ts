@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from 'react';
 import { rosService } from '../services/rosService';
-import { apiService } from '../services/apiService';
 import { useAppStore } from './useAppStore';
 
 export const useROS = () => {

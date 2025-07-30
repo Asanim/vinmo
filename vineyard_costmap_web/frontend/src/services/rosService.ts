@@ -1,5 +1,5 @@
 import ROSLIB from 'roslib';
-import { CostmapParameters, ProcessingJob, SystemStatus, DetectionResult, CostmapData } from '../types';
+import { CostmapParameters, ProcessingJob, SystemStatus, CostmapData } from '../types';
 
 class ROSService {
   private ros: ROSLIB.Ros | null = null;
@@ -29,7 +29,7 @@ class ROSService {
         }
       });
 
-      this.ros.on('error', (error) => {
+      this.ros.on('error', (error: any) => {
         console.error('ROS connection error:', error);
         this.notifyConnectionListeners(false);
       });

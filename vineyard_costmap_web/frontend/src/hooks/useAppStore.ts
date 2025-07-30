@@ -76,7 +76,7 @@ interface AppState {
   clearError: () => void;
 }
 
-export const useAppStore = create<AppState>((set, get) => ({
+export const useAppStore = create<AppState>((set) => ({
   // Initial state
   user: null,
   isAuthenticated: false,

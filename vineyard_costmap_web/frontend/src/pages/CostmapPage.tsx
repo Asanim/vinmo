@@ -15,7 +15,7 @@ import { useAppStore } from '../hooks/useAppStore';
 import { CostmapLayer, LayerType } from '../types';
 
 export const CostmapPage: React.FC = () => {
-  const { costmaps, selectedCostmap, setSelectedCostmap, costmapLayers, updateCostmapLayers } = useAppStore();
+  const { costmaps, selectedCostmap, setSelectedCostmap, updateCostmapLayers } = useAppStore();
   
   const [layers, setLayers] = useState<CostmapLayer[]>([
     { type: 'obstacles', visible: true, opacity: 0.8, color: '#ff0000', data: [] },
@@ -30,9 +30,7 @@ export const CostmapPage: React.FC = () => {
     setSelectedCostmap(costmap);
     
     if (costmap) {
-      // Load layers for selected costmap
-      const costmapLayers = costmapLayers[costmap.id] || layers;
-      setLayers(costmapLayers);
+      // Layers will be updated when costmap data is loaded
     }
   };
 

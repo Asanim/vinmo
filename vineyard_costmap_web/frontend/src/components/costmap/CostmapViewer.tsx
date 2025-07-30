@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   MapContainer,
-  TileLayer,
-  ImageOverlay,
-  LayersControl,
   useMap,
 } from 'react-leaflet';
 import {
@@ -12,7 +9,6 @@ import {
   Typography,
   IconButton,
   Slider,
-  FormControlLabel,
   Switch,
   Accordion,
   AccordionSummary,
@@ -31,7 +27,6 @@ import {
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { CostmapData, CostmapLayer, LayerType } from '../../types';
-import { useAppStore } from '../../hooks/useAppStore';
 
 interface CostmapViewerProps {
   costmap: CostmapData | null;
