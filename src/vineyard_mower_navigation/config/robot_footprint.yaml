@@ -1,0 +1,10 @@
+# Robot footprint configuration for vineyard autonomous navigation
+# Based on the URDF dimensions: base_width=1.5m, base_length=0.5m
+
+robot_footprint: "[[-0.25, -0.75], [0.25, -0.75], [0.25, 0.75], [-0.25, 0.75]]"
+
+# Safety margins for vineyard navigation
+footprint_padding: 0.05
+
+# Additional clearance parameters
+robot_radius: 0.8  # Conservative radius for circular approximation
