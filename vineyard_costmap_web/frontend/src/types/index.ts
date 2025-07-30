@@ -155,3 +155,67 @@ export interface DetectionResult {
     total_obstacles: number;
   };
 }
+
+// ROS Service Interfaces (matching .srv files)
+export interface GenerateCostmapRequest {
+  center_latitude: number;
+  center_longitude: number;
+  zoom_level: number;
+  use_local_image: boolean;
+  image_path: string;
+}
+
+export interface GenerateCostmapResponse {
+  success: boolean;
+  message: string;
+  costmap: {
+    header: {
+      stamp: any;
+      frame_id: string;
+    };
+    info: {
+      map_load_time: any;
+      resolution: number;
+      width: number;
+      height: number;
+      origin: {
+        position: { x: number; y: number; z: number };
+        orientation: { x: number; y: number; z: number; w: number };
+      };
+    };
+    data: number[];
+  };
+  rows_detected: number;
+  obstacles_detected: number;
+  row_spacing: number;
+}
+
+export interface GetCostmapInfoRequest {
+  // Empty request
+}
+
+export interface GetCostmapInfoResponse {
+  has_costmap: boolean;
+  width: number;
+  height: number;
+  resolution: number;
+  origin_x: number;
+  origin_y: number;
+  frame_id: string;
+  rows_detected: number;
+  obstacles_detected: number;
+  row_spacing: number;
+  auto_update_enabled: boolean;
+}
+
+export interface UpdateCostmapLayerRequest {
+  layer_name: string;
+  width: number;
+  height: number;
+  layer_data: number[];
+}
+
+export interface UpdateCostmapLayerResponse {
+  success: boolean;
+  message: string;
+}

@@ -127,7 +127,7 @@ export const useAppStore = create<AppState>((set) => ({
     })),
   
   setProcessingJobs: (processingJobs) => 
-    set((state) => ({
+    set(() => ({
       processingJobs,
       activeJobs: processingJobs.filter(job => 
         job.status === 'pending' || job.status === 'running'

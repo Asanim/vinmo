@@ -291,7 +291,7 @@ class ROSService {
 
       let completedChecks = 0;
       
-      serviceNames.forEach((serviceName, index) => {
+      serviceNames.forEach((serviceName) => {
         const service = new ROSLIB.Service({
           ros: this.ros!,
           name: serviceName,
