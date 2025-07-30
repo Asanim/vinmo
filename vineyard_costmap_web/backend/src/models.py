@@ -54,7 +54,7 @@ class CostmapData(Base):
     origin_z = Column(Float, default=0.0)
     data_file_path = Column(String(500), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
-    metadata = Column(JSON, default=dict)
+    costmap_metadata = Column(JSON, default=dict)
     
     # Relationships
     satellite_image = relationship("SatelliteImage", back_populates="costmap")
