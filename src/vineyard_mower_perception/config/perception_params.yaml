@@ -1,0 +1,101 @@
+# Vineyard Mower Perception System Configuration
+# This file contains parameters for all perception nodes
+
+# Advanced Perception Fusion Parameters
+advanced_perception_fusion:
+  ros__parameters:
+    # Processing rates
+    fusion_rate: 30.0  # Hz - Main fusion processing rate
+    
+    # Sensor range limits
+    max_range: 10.0    # meters - Maximum sensor range
+    min_range: 0.1     # meters - Minimum sensor range
+    
+    # Grid parameters for occupancy mapping
+    grid_resolution: 0.05    # meters - Grid cell size
+    grid_width: 400          # cells - Grid width (20m at 0.05m resolution)
+    grid_height: 400         # cells - Grid height (20m at 0.05m resolution)
+    
+    # Confidence and quality thresholds
+    confidence_threshold: 0.5    # Minimum confidence for obstacle marking
+    sensor_timeout: 2.0          # seconds - Sensor data timeout
+    
+    # Sensor fusion weights
+    lidar_weight: 0.6           # Weight for LiDAR data in fusion
+    depth_weight: 0.4           # Weight for depth camera data in fusion
+    
+    # Occupancy grid thresholds
+    obstacle_threshold: 0.65    # Threshold for marking cells as occupied
+    free_threshold: 0.25        # Threshold for marking cells as free
+
+# Depth Obstacle Mapper Parameters
+depth_obstacle_mapper:
+  ros__parameters:
+    # Camera settings
+    target_frame: "base_link"   # Target coordinate frame
+    max_depth: 8.0              # meters - Maximum depth processing range
+    min_depth: 0.3              # meters - Minimum depth processing range
+    depth_scale: 0.001          # Depth units to meters conversion
+    
+    # Ground plane detection
+    ground_height_tolerance: 0.1    # meters - Tolerance for ground plane detection
+    ground_sample_ratio: 0.3        # Fraction of points used for ground estimation
+    
+    # Obstacle classification
+    min_obstacle_height: 0.15       # meters - Minimum height to consider as obstacle
+    max_obstacle_height: 3.0        # meters - Maximum obstacle height
+    
+    # Point cloud processing
+    cluster_tolerance: 0.05         # meters - DBSCAN clustering tolerance
+    min_cluster_size: 10            # Minimum points per cluster
+    max_cluster_size: 5000          # Maximum points per cluster
+    processing_skip: 2              # Process every nth pixel (for performance)
+
+# Vine Detection Parameters
+vine_detection_node:
+  ros__parameters:
+    # Detection rates and ranges
+    detection_rate: 10.0            # Hz - Vine detection processing rate
+    max_detection_range: 5.0        # meters - Maximum vine detection range
+    
+    # Safety distances
+    safety_distance: 1.0            # meters - Critical safety distance to vines
+    warning_distance: 1.5           # meters - Warning distance to vines
+    
+    # Image processing parameters
+    min_vine_area: 500              # pixels - Minimum area for vine candidates
+    max_vine_area: 50000            # pixels - Maximum area for vine candidates
+    vegetation_threshold: 0.3       # Fraction of green pixels required
+    
+    # Feature detection toggles
+    enable_color_detection: true    # Enable color-based vine detection
+    enable_shape_detection: true    # Enable shape-based vine detection
+    enable_proximity_warnings: true # Enable proximity warning system
+    debug_visualization: false     # Enable debug image outputs
+
+# Sensor Health Monitor Parameters
+sensor_health_monitor:
+  ros__parameters:
+    # Health monitoring thresholds
+    sensor_timeout: 2.0             # seconds - Timeout for sensor data
+    quality_threshold: 0.7          # Minimum acceptable sensor quality
+    degraded_threshold: 0.5         # Threshold for degraded sensor status
+    
+    # Frequency monitoring
+    frequency_tolerance: 0.2        # 20% tolerance for expected frequencies
+    expected_lidar_freq: 10.0       # Hz - Expected LiDAR frequency
+    expected_camera_freq: 30.0      # Hz - Expected camera frequency
+    
+    # Quality assessment parameters
+    min_lidar_points: 100           # Minimum valid LiDAR points
+    min_depth_valid_pixels: 0.5     # Minimum fraction of valid depth pixels
+    max_error_rate: 0.1             # Maximum acceptable error rate
+    
+    # Alert system
+    enable_predictive_alerts: true  # Enable predictive maintenance alerts
+    alert_cooldown: 30.0            # seconds - Cooldown between repeated alerts
+
+# Common parameters for all nodes
+/**:
+  ros__parameters:
+    use_sim_time: true              # Use simulation time when in Gazebo
