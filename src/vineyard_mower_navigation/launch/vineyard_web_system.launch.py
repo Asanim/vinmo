@@ -98,20 +98,18 @@ def generate_launch_description():
     )
 
     # ROS Nodes
-    costmap_service_node = Node(
+    costmap_web_service_node = Node(
         package='vineyard_mower_navigation',
-        executable='costmap_service.py',
-        name='costmap_service',
+        executable='costmap_web_service.py',
+        name='costmap_web_service',
         output='screen',
         parameters=[{
-            'google_maps_api_key': LaunchConfiguration('google_api_key'),
-            'costmap_config_file': LaunchConfiguration('config_file'),
             'default_resolution': LaunchConfiguration('resolution'),
             'default_width': LaunchConfiguration('width'), 
             'default_height': LaunchConfiguration('height'),
-            'auto_update_rate': LaunchConfiguration('auto_update_rate'),
-            'save_costmaps': LaunchConfiguration('save_costmaps'),
-            'costmap_save_path': LaunchConfiguration('save_path')
+            'frame_id': 'map',
+            'costmap_topic': '/costmap/updates',
+            'job_updates_topic': '/costmap/job_updates'
         }]
     )
 
@@ -197,7 +195,7 @@ def generate_launch_description():
         # ROS Nodes
         GroupAction([
             LogInfo(msg='Starting ROS Costmap Nodes...'),
-            costmap_service_node,
+            costmap_web_service_node,
             costmap_publisher_node
         ]),
 
