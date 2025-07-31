@@ -25,17 +25,9 @@ install(
     scripts/generate_test_images.py
     scripts/costmap_publisher.py
     scripts/costmap_service.py
+    vineyard_mower_navigation/costmap_web_service.py
   DESTINATION lib/${PROJECT_NAME}
 )
-
-# Install Python scripts
-install(
-  PROGRAMS 
-    scripts/costmap_publisher.py
-    scripts/costmap_service.py
-  DESTINATION bin/${PROJECT_NAME}
-)
-
 
 # Install Python modules
 install(
