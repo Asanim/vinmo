@@ -14,12 +14,21 @@ find_package(nav_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
 # Try to find nlohmann_json, if not available, we'll provide instructions
 find_package(nlohmann_json QUIET)
 if(NOT nlohmann_json_FOUND)
   message(WARNING "nlohmann_json not found. Install with: sudo apt install nlohmann-json3-dev")
 endif()
+
+# Generate interfaces
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/GenerateCostmap.srv"
+  "srv/GetCostmapInfo.srv"
+  "srv/UpdateCostmapLayer.srv"
+  DEPENDENCIES builtin_interfaces std_msgs geometry_msgs nav_msgs
+)
 
 # Install header files
 install(DIRECTORY include/
@@ -28,7 +37,7 @@ install(DIRECTORY include/
 
 # Export dependencies and include directories
 ament_export_include_directories(include)
-ament_export_dependencies(builtin_interfaces std_msgs geometry_msgs nav_msgs std_srvs rclcpp rclcpp_action)
+ament_export_dependencies(builtin_interfaces std_msgs geometry_msgs nav_msgs std_srvs rclcpp rclcpp_action rosidl_default_runtime)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

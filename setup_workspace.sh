@@ -29,6 +29,18 @@ first_install() {
     sudo apt install -y ros-jazzy-twist-stamper
     gz sim --help
 
+<<<<<<< Updated upstream
+=======
+    sudo systemctl enable docker.service
+    sudo systemctl enable containerd.service
+
+    sudo apt install ros-jazzy-rosbridge-*
+    pip install psutil bson argcomplete
+    pip install pymongo tornado
+
+    pip uninstall em
+    pip install empty
+>>>>>>> Stashed changes
 }
 
 first_install
