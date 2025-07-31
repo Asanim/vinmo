@@ -30,6 +30,8 @@ first_install() {
     gz sim --help
 
     sudo apt install ros-jazzy-grid-map-pcl  ros-jazzy-pcl-conversions ros-jazzy-pcl-msgs ros-jazzy-pcl-ros
+    pip install scikit-learn open3d
+
 }
 
 first_install

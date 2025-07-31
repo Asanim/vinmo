@@ -20,31 +20,31 @@ def generate_launch_description():
     # Launch arguments
     use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='true',
+        default_value='True',
         description='Use simulation (Gazebo) clock if true'
     )
     
     enable_front_camera_arg = DeclareLaunchArgument(
         'enable_front_camera',
-        default_value='true',
+        default_value='True',
         description='Enable front camera processing'
     )
     
     enable_rear_camera_arg = DeclareLaunchArgument(
         'enable_rear_camera',
-        default_value='true',
+        default_value='True',
         description='Enable rear camera processing'
     )
     
     enable_vine_detection_arg = DeclareLaunchArgument(
         'enable_vine_detection',
-        default_value='true',
+        default_value='True',
         description='Enable vine detection system'
     )
     
     enable_sensor_health_arg = DeclareLaunchArgument(
         'enable_sensor_health',
-        default_value='true',
+        default_value='True',
         description='Enable sensor health monitoring'
     )
     
