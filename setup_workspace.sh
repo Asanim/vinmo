@@ -29,6 +29,7 @@ first_install() {
     sudo apt install -y ros-jazzy-twist-stamper
     gz sim --help
 
+    sudo apt install ros-jazzy-grid-map-pcl  ros-jazzy-pcl-conversions ros-jazzy-pcl-msgs ros-jazzy-pcl-ros
 }
 
 first_install
