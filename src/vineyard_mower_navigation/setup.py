@@ -13,7 +13,10 @@ setup(
         (share_prefix + 'ament_index/resource_index/packages',
             ['resource/' + package_name]),
         (share_prefix + package_name, ['package.xml']),
-        (share_prefix + package_name + '/launch', ['launch/costmap_generation.launch.py']),
+        (share_prefix + package_name + '/launch', [
+            'launch/costmap_generation.launch.py',
+            'launch/vineyard_web_system.launch.py'
+        ]),
         (share_prefix + package_name + '/config', ['config/costmap_config.yaml']),
         ('lib/' + package_name, [
             'scripts/gps_reference_publisher.py',
@@ -42,6 +45,7 @@ setup(
     entry_points={
         'console_scripts': [
             'costmap_service = vineyard_mower_navigation.costmap_service:main',
+            'costmap_web_service = vineyard_mower_navigation.costmap_web_service:main',
             'costmap_publisher = vineyard_mower_navigation.costmap_generator:main',
         ],
     },
