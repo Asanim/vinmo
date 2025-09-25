@@ -1,107 +1,136 @@
-# Vineyard Mower Robot - ROS2 Project
+# Vineyard Mower Robot
 
-A ROS2-based differential drive robot designed for autonomous vineyard mowing operations.
+ROS2-based autonomous navigation system for vineyard environments with satellite imagery processing and web-based mission planning.
 
-## Notes
+## What is this?
 
-update python path to find packages...
-PYTHONPATH=/opt/ros/jazzy/lib/python3.12/site-packages:/home/sam/vinmo/install/vineyard_mower_navigation/lib/python3/dist-packages/
+This project provides autonomous navigation capabilities for vineyard environments through:
 
+- **Satellite imagery processing** that detects vine rows, obstacles, and navigable areas
+- **Costmap generation** for path planning and obstacle avoidance  
+- **Web interface** for mission planning, parameter tuning, and real-time monitoring
+- **ROS2 integration** with standard navigation stack compatibility
 
+The system processes satellite images to generate navigation costmaps, enabling robots to autonomously navigate vineyard terrain while avoiding obstacles and following designated paths.
 
-## Project Structure
+## Architecture 
 
 ```text
 vinmo/
 ├── src/
-│   ├── vineyard_mower_description/    # Robot URDF and visualization
-│   │   ├── urdf/                      # Robot description files
-│   │   ├── launch/                    # Launch files for visualization
-│   │   ├── config/                    # RViz configuration
-│   │   └── meshes/                    # 3D mesh files (empty for now)
-│   └── vineyard_mower_gazebo/         # Gazebo simulation
-│       ├── launch/                    # Simulation launch files
-│       └── worlds/                    # Gazebo world files
-├── setup_workspace.sh                 # Workspace setup script
-└── project_prompts.md                # Development prompts for future phases
+│   ├── vineyard_mower_description/    # Robot URDF and 3D models
+│   ├── vineyard_mower_gazebo/         # Simulation environments
+│   ├── vineyard_mower_interfaces/     # Custom ROS2 service definitions
+│   ├── vineyard_mower_navigation/     # Core navigation and costmap generation
+│   └── vineyard_web_interface/        # ROS2 web integration services
+├── vineyard_costmap_web/              # React frontend + FastAPI backend
+├── doc/                               # Documentation
+└── launch_vineyard_web.sh            # Single-command system startup
 ```
 
-## Robot Specifications
+### Core Components
 
-- **Dimensions**: 1.5m wide × 0.5m long × 0.5m high
-- **Drive System**: Differential drive with caterpillar tracks
-- **Sensors** (ready for integration):
-  - Odometry sensors
-  - 2D LiDAR (mounted on top center)
-  - Front-facing Intel RealSense depth camera
-  - Rear-facing Intel RealSense depth camera
+**Navigation Stack** (`vineyard_mower_navigation/`)
+- Satellite image processing with OpenCV
+- Vine row detection using Hough transforms
+- Costmap generation for ROS2 nav stack
+- GPS coordinate handling and transformations
+
+**Web Application** (`vineyard_costmap_web/`)
+- React frontend with real-time visualization
+- FastAPI backend with PostgreSQL storage
+- ROSbridge WebSocket communication
+- Parameter tuning and mission management
+
+**Simulation** (`vineyard_mower_gazebo/`)
+- Realistic vineyard world generation
+- Robot physics and sensor simulation
+- Testing environments for navigation algorithms
 
 ## Quick Start
 
-### Prerequisites
+```bash
+# Clone and build
+./setup_workspace.sh
 
-- ROS2 Humble installation
-- Gazebo 11+
-- RViz2
+# Start complete system (ROS nodes + web interface)
+./launch_vineyard_web.sh
+```
 
-### Setup and Build
+**Access Points:**
+- Web Interface: http://localhost:3000
+- API Documentation: http://localhost:8000/docs
+- ROSbridge WebSocket: ws://localhost:9091
 
-1. **Clone and setup the workspace:**
+For detailed setup instructions, see [doc/QUICKSTART.md](doc/QUICKSTART.md).
 
-   ```bash
-   cd $HOME/vinmo
-   ./setup_workspace.sh
-   ```
+## How it Works
 
-2. **Source the workspace:**
+1. **Image Processing**: Upload satellite imagery through web interface
+2. **Detection**: Computer vision algorithms identify vine rows, obstacles, and free space
+3. **Costmap Generation**: Detection results convert to ROS2 OccupancyGrid messages
+4. **Mission Planning**: Web interface allows parameter adjustment and progress monitoring
+5. **Navigation**: Generated costmaps integrate with standard ROS2 navigation stack
 
-   ```bash
-   source install/setup.bash
-   ```
+## Use Cases
 
-### Running the Simulation
+**Farm Operations**
+- Generate navigation maps from aerial imagery
+- Plan autonomous mowing patterns
+- Monitor field conditions and obstacles
 
-#### Full Simulation (Gazebo + RViz)
+**Research & Development**  
+- Test navigation algorithms in simulation
+- Analyze detection parameter performance
+- Export data for further analysis
+
+## ROS2 Integration
+
+The system provides standard ROS2 interfaces:
+
+**Services:**
+- `/costmap/generate_costmap` - Process satellite imagery
+- `/costmap/get_costmap_info` - Retrieve map metadata  
+- `/costmap/update_costmap_layer` - Modify specific map layers
+
+**Topics:**
+- `/costmap/updates` (nav_msgs/OccupancyGrid) - Real-time map updates
+- `/costmap/job_updates` (std_msgs/String) - Processing status
+
+Compatible with nav2, move_base, and other ROS2 navigation frameworks.
+
+## System Requirements
+
+- ROS2 Jazzy or Humble
+- Python 3.10+
+- Node.js 18+ (for web interface)
+- OpenCV, NumPy, scikit-image
+- PostgreSQL (for web backend)
+
+## Development
 
 ```bash
+# Build specific components
+colcon build --packages-select vineyard_mower_navigation
+
+# Run tests
+colcon test --packages-select vineyard_mower_navigation
+
+# Launch simulation only
 ros2 launch vineyard_mower_gazebo robot_simulation.launch.py
 ```
 
-#### RViz Visualization Only
+### Available ROS2 Topics
 
-```bash
-ros2 launch vineyard_mower_description display.launch.py
-```
-
-#### Gazebo Simulation Only
-
-```bash
-ros2 launch vineyard_mower_gazebo gazebo.launch.py
-```
-
-### Robot Control
-
-Once the simulation is running, you can control the robot using:
-
-```bash
-# Basic movement commands
-ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
-
-# Stop the robot
-ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
-```
-
-### Available Topics
-
-- `/cmd_vel` - Velocity commands (geometry_msgs/Twist)
+- `/cmd_vel` - Robot velocity commands (geometry_msgs/Twist)
 - `/odom` - Odometry data (nav_msgs/Odometry)
+- `/costmap/updates` - Navigation costmap updates (nav_msgs/OccupancyGrid)
 - `/robot_description` - Robot URDF description
-- `/joint_states` - Joint state information
+
+## Contributing
+
+We welcome contributions to improve navigation algorithms, add new detection methods, or enhance the web interface. Please see individual component READMEs for specific development guidelines.
 
 ## License
 
 MIT License
-
-## Contributing
-
-This is part of a structured development process. Each phase should be completed before moving to the next prompt in the development sequence.
