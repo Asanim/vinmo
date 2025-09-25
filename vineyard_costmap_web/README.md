@@ -53,7 +53,7 @@ cd frontend
 npm run dev
 
 # Start backend development server
-cd backend/src
+cd backend/src 
 python main.py
 
 # Start ROS2 bridge
