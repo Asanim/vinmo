@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>vineyard_mower_perception</name>
+  <version>0.0.1</version>
+  <description>Multi-sensor perception and obstacle detection for vineyard mower robot</description>
+  
+  <maintainer email="developer@vineyard-robotics.com">Vineyard Robotics Team</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <!-- Core ROS2 dependencies -->
+  <depend>rclpy</depend>
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+  <!-- Computer vision and point cloud processing -->
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+  <depend>pcl_ros</depend>
+  <depend>pcl_conversions</depend>
+  <depend>laser_geometry</depend>
+
+  <!-- Message filtering and synchronization -->
+  <depend>message_filters</depend>
+
+  <!-- Custom message dependencies -->
+  <depend>vineyard_mower_interfaces</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

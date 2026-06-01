@@ -47,6 +47,9 @@ first_install() {
     pip uninstall em
     pip install empty
 >>>>>>> Stashed changes
+    sudo apt install ros-jazzy-grid-map-pcl  ros-jazzy-pcl-conversions ros-jazzy-pcl-msgs ros-jazzy-pcl-ros
+    pip install scikit-learn open3d
+
 }
 
 first_install

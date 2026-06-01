@@ -65,7 +65,7 @@ class CostmapSystemTest:
             print(f"Navigation build failed: {stderr}")
             return False
         
-        print("✅ Build system test passed")
+        print("Build system test passed")
         return True
     
     def test_image_generation(self):
@@ -94,7 +94,7 @@ class CostmapSystemTest:
             print("No test images generated")
             return False
         
-        print(f"✅ Generated {len(image_files)} test images")
+        print(f"Generated {len(image_files)} test images")
         return True
     
     def test_satellite_processing(self):
@@ -135,7 +135,7 @@ print("SUCCESS")
             print(f"Satellite processing test failed: {stderr}")
             return False
         
-        print("✅ Satellite processing test passed")
+        print("Satellite processing test passed")
         return True
     
     def test_costmap_generation(self):
@@ -181,7 +181,7 @@ print("SUCCESS")
             print(f"Costmap generation test failed: {stderr}")
             return False
         
-        print("✅ Costmap generation test passed")
+        print("Costmap generation test passed")
         return True
     
     def test_ros_services(self):
@@ -206,7 +206,7 @@ print("SUCCESS")
             print(f"⚠️ ROS2 package not found: {stderr}")
             return True  # Don't fail the test, just warn
         
-        print("✅ ROS2 services test passed")
+        print("ROS2 services test passed")
         return True
     
     def test_unit_tests(self):
@@ -223,7 +223,7 @@ print("SUCCESS")
             print(f"Unit tests failed: {stderr}")
             return False
         
-        print("✅ Unit tests passed")
+        print("Unit tests passed")
         return True
     
     def run_all_tests(self):
@@ -249,7 +249,7 @@ print("SUCCESS")
                     all_passed = False
                     print(f"❌ {test_name} FAILED")
                 else:
-                    print(f"✅ {test_name} PASSED")
+                    print(f"{test_name} PASSED")
             except Exception as e:
                 print(f"❌ {test_name} ERROR: {e}")
                 all_passed = False

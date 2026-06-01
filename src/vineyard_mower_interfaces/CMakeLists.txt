@@ -28,6 +28,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/GetCostmapInfo.srv"
   "srv/UpdateCostmapLayer.srv"
   "action/PlanPath.action"
+  "msg/VineProximity.msg"
+  "srv/GenerateCostmap.srv"
+  "srv/GetCostmapInfo.srv"
+  "srv/UpdateCostmapLayer.srv"
   DEPENDENCIES builtin_interfaces std_msgs geometry_msgs nav_msgs
 )
 
