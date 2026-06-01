@@ -35,8 +35,6 @@ first_install() {
     sudo apt install ros-jazzy-rosbridge-*
     pip install psutil bson argcomplete
     pip install pymongo tornado
-<<<<<<< Updated upstream
-=======
     sudo systemctl enable docker.service
     sudo systemctl enable containerd.service
 
@@ -46,7 +44,6 @@ first_install() {
 
     pip uninstall em
     pip install empty
->>>>>>> Stashed changes
     sudo apt install ros-jazzy-grid-map-pcl  ros-jazzy-pcl-conversions ros-jazzy-pcl-msgs ros-jazzy-pcl-ros
     pip install scikit-learn open3d
 
