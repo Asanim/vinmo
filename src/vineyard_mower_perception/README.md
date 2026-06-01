@@ -186,10 +186,10 @@ This provides additional topics:
 
 ### Success Criteria (Phase 1)
 
-- ✅ **Fused sensor data with 95% accuracy**
-- ✅ **30Hz real-time processing**
-- ✅ **Basic vine detection with 80% accuracy**
-- ✅ **Sensor health monitoring functional**
+- **Fused sensor data with 95% accuracy**
+- **30Hz real-time processing**
+- **Basic vine detection with 80% accuracy**
+- **Sensor health monitoring functional**
 
 ### Expected Performance
 

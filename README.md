@@ -2,28 +2,57 @@
 
 A ROS2-based differential drive robot designed for autonomous vineyard mowing operations.
 
+**Completed Systems:**
+- Complete robot description with sensors (LiDAR, depth cameras)
+- Realistic vineyard simulation environment
+- Full Nav2 navigation stack with agricultural optimizations
+- SLAM and localization capabilities
+- Basic obstacle avoidance using costmaps
+- Teleoperation and diagnostics
+- **Multi-sensor perception system with sensor fusion**
+- **Advanced depth camera processing and 3D obstacle detection**
+- **Vine detection system with proximity warnings**
+- **Comprehensive sensor health monitoring**
+
+**Current Gaps (Emergency & Advanced Safety):**
+- No emergency stop mechanisms
+- No sensor failure fallback behaviors
+- No boundary enforcement systems
+- No predictive collision avoidance
+- No environmental hazard detection
+
 ## Notes
 
-update python path to find packages...
+```bash
 PYTHONPATH=/opt/ros/jazzy/lib/python3.12/site-packages:/home/sam/vinmo/install/vineyard_mower_navigation/lib/python3/dist-packages/
-
-
+```
 
 ## Project Structure
 
 ```text
-vinmo/
+vinmo2/
 ├── src/
 │   ├── vineyard_mower_description/    # Robot URDF and visualization
 │   │   ├── urdf/                      # Robot description files
 │   │   ├── launch/                    # Launch files for visualization
 │   │   ├── config/                    # RViz configuration
 │   │   └── meshes/                    # 3D mesh files (empty for now)
-│   └── vineyard_mower_gazebo/         # Gazebo simulation
-│       ├── launch/                    # Simulation launch files
-│       └── worlds/                    # Gazebo world files
+│   ├── vineyard_mower_gazebo/         # Gazebo simulation
+│   │   ├── launch/                    # Simulation launch files
+│   │   └── worlds/                    # Gazebo world files
+│   ├── vineyard_mower_navigation/     # Navigation stack
+│   │   ├── launch/                    # Navigation launch files
+│   │   ├── config/                    # Nav2 configuration
+│   │   └── scripts/                   # Navigation utilities
+│   ├── vineyard_mower_perception/     # Multi-sensor perception (NEW)
+│   │   ├── scripts/                   # Perception nodes
+│   │   ├── launch/                    # Perception launch files
+│   │   └── config/                    # Perception parameters
+│   └── vineyard_mower_interfaces/     # Custom ROS2 messages
+│       ├── msg/                       # Message definitions
+│       └── srv/                       # Service definitions
 ├── setup_workspace.sh                 # Workspace setup script
-└── project_prompts.md                # Development prompts for future phases
+└── prompts_breakdown.md              # Development phase breakdown
 ```
 
 ## Robot Specifications
