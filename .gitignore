@@ -29,3 +29,4 @@ dist/
 
 # Environment files
 .env
+.github
