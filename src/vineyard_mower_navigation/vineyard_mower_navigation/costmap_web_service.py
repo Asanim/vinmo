@@ -59,7 +59,7 @@ class CostmapWebService(Node):
         self.processing_lock = threading.Lock()
         
         # Parameters
-        self.declare_parameters()
+        self._declare_node_parameters()
         
         # Services
         self.create_services()
@@ -76,7 +76,7 @@ class CostmapWebService(Node):
         self.get_logger().info('  - /costmap/update_costmap_layer') 
         self.get_logger().info('  - /costmap/get_costmap_info')
     
-    def declare_parameters(self):
+    def _declare_node_parameters(self):
         """Declare node parameters"""
         self.declare_parameter('default_resolution', 0.1)
         self.declare_parameter('default_width', 1000)
