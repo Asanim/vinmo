@@ -66,14 +66,33 @@ fi
 
 # Set up ROS environment
 echo -e "${YELLOW}Setting up ROS environment...${NC}"
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
+
+# Check if install directory exists
+if [ ! -d "install" ]; then
+    echo -e "${RED}Error: install directory not found!${NC}"
+    echo -e "${YELLOW}Please build the workspace first with: colcon build${NC}"
+    exit 1
+fi
+
+# Source ROS2
+if [ ! -f "/opt/ros/jazzy/setup.bash" ]; then
+    echo -e "${RED}Error: ROS2 Jazzy not found at /opt/ros/jazzy/setup.bash${NC}"
+    exit 1
+fi
+source /opt/ros/jazzy/setup.bash || { echo -e "${RED}Failed to source ROS2${NC}"; exit 1; }
+
+# Source workspace
+source install/setup.bash || { echo -e "${RED}Failed to source workspace${NC}"; exit 1; }
+
+# Set ROS domain ID
+export ROS_DOMAIN_ID=0
+echo -e "${GREEN}ROS_DOMAIN_ID set to: $ROS_DOMAIN_ID${NC}"
 
 # Build the workspace if needed
 if [ "$1" = "--build" ]; then
     echo -e "${YELLOW}Building workspace...${NC}"
-    colcon build --packages-select vineyard_mower_navigation
-    source install/setup.bash
+    colcon build --packages-select vineyard_mower_navigation || { echo -e "${RED}Build failed${NC}"; exit 1; }
+    source install/setup.bash || { echo -e "${RED}Failed to source workspace after build${NC}"; exit 1; }
 fi
 
 echo -e "${GREEN}Starting Vineyard Costmap Web System...${NC}"

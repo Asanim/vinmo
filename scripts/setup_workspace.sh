@@ -23,6 +23,7 @@ first_install() {
     sudo apt update && sudo apt install -y ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-gz-ros2-control ros-jazzy-controller-manager ros-jazzy-diff-drive-controller ros-jazzy-joint-state-broadcaster
     sudo apt install -y xterm
     sudo apt-get install -y ros-jazzy-diagnostic-aggregator
+    sudo apt install -y ros-jazzy-fastcdr
 
     sudo apt install -y ros-jazzy-cartographer ros-jazzy-cartographer-ros ros-jazzy-cartographer-ros-msgs ros-jazzy-cartographer-rviz
 

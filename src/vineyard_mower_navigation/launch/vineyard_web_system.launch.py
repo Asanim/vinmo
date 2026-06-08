@@ -129,17 +129,22 @@ def generate_launch_description():
     # ROSbridge WebSocket Server (using different port to avoid conflicts)
     rosbridge_server = ExecuteProcess(
         cmd=[
-            'ros2', 'launch', 'rosbridge_server', 'rosbridge_websocket_launch.xml',
-            'port:=9091'  # Use port 9091 instead of 9090
+            'bash', '-c',
+            'source /opt/ros/jazzy/setup.bash && '
+            'source /home/sam/vinmo/install/setup.bash && '
+            'ros2 launch rosbridge_server rosbridge_websocket_launch.xml port:=9091'
         ],
         output='screen',
-        name='rosbridge_websocket'
+        name='rosbridge_websocket',
+        additional_env={
+            'ROS_DOMAIN_ID': '0'
+        }
     )
 
     # Web Backend (FastAPI)
     web_backend = ExecuteProcess(
         cmd=[
-            '/bin/bash', '-c', 
+            'bash', '-c', 
             'source /opt/ros/jazzy/setup.bash && '
             'source /home/sam/vinmo/install/setup.bash && '
             'cd /home/sam/vinmo/vineyard_costmap_web/backend/src && '
@@ -156,8 +161,8 @@ def generate_launch_description():
     # Web Frontend (React/Vite dev server)
     web_frontend = ExecuteProcess(
         cmd=[
-            '/bin/bash', '-c',
-            'export PATH="/usr/bin:/usr/local/bin:$PATH" && '
+            'bash', '-c',
+            'export PATH="/usr/local/bin:/usr/bin:$PATH" && '
             'cd /home/sam/vinmo/vineyard_costmap_web/frontend && '
             'npm run dev'
         ],
