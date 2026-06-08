@@ -52,6 +52,9 @@ first_install() {
 
 first_install
 
+echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+
 # Source ROS2 installation
 source /opt/ros/jazzy/setup.bash
 
