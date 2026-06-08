@@ -1,6 +1,6 @@
 <!--
   This Behavior Tree replaces the default behavior tree provided by Nav2 with vineyard-specific behaviors.
-  It is specifically designed for agricultural autonomous navigation with enhanced recovery behaviors
+  It is specifically designed for agricultural autonomous navigation with recovery behaviors
   for narrow corridors and structured vineyard environments.
 -->
 <root main_tree_to_execute="MainTree">

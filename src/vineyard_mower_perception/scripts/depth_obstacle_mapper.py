@@ -125,7 +125,7 @@ class DepthObstacleMapper(Node):
             self.reliable_qos
         )
         
-        # RGB image subscriber (for enhanced processing)
+        # RGB image subscriber (for processing)
         self.rgb_sub = self.create_subscription(
             Image,
             f'/{self.camera_namespace}/image',
@@ -177,7 +177,7 @@ class DepthObstacleMapper(Node):
         self.get_logger().info(f"Updated camera intrinsics for {self.camera_namespace}")
     
     def rgb_callback(self, msg):
-        """Store latest RGB image for enhanced processing"""
+        """Store latest RGB image for processing"""
         try:
             self.latest_rgb = self.cv_bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
         except Exception as e:

@@ -6,7 +6,7 @@ This package provides Navigation2 (Nav2) integration for autonomous vineyard nav
 
 ### 🚜 **Agricultural Vehicle Optimization**
 - **Robot Footprint**: Configured for 1.5m wide agricultural vehicle
-- **Safety Margins**: Enhanced inflation parameters for vineyard safety
+- **Safety Margins**: inflation parameters for vineyard safety
 - **Narrow Corridor Navigation**: Optimized for vineyard row navigation
 - **Differential Drive**: Supports tracked/wheeled agricultural platforms
 
@@ -20,7 +20,7 @@ This package provides Navigation2 (Nav2) integration for autonomous vineyard nav
 - **Path Planning**: NavFn and SMAC planners for optimal route planning
 - **Local Control**: DWB local planner optimized for agricultural dynamics
 - **Behavior Trees**: Vineyard-specific recovery behaviors
-- **Collision Avoidance**: Enhanced safety systems for agricultural environments
+- **Collision Avoidance**: safety systems for agricultural environments
 
 ### 📊 **Monitoring & Visualization**
 - **RViz Integration**: Custom configuration for vineyard navigation
@@ -116,7 +116,7 @@ ros2 run vineyard_mower_navigation gps_reference_publisher.py
 
 ## Vineyard-Specific Features
 
-### Enhanced Recovery Behaviors
+### Recovery Behaviors
 The system includes specialized recovery behaviors for vineyard environments:
 - **Clearing Rotation**: 90° rotation with costmap clearing
 - **Backup and Clear**: Controlled backward movement with obstacle clearing
@@ -126,12 +126,12 @@ The system includes specialized recovery behaviors for vineyard environments:
 - **Speed Limits**: Optimized for agricultural vehicle capabilities (0.8 m/s max)
 - **Acceleration Limits**: Conservative acceleration for heavy agricultural equipment
 - **Turn Radius**: Configured for wide agricultural vehicles
-- **Safety Margins**: Enhanced inflation for crop protection
+- **Safety Margins**: inflation for crop protection
 
 ### Structured Environment Optimization
 - **Row Detection**: Vineyard row detection algorithms
 - **Corridor Navigation**: Optimized for narrow vineyard rows
-- **Obstacle Avoidance**: Enhanced for grape vines and vineyard infrastructure
+- **Obstacle Avoidance**: for grape vines and vineyard infrastructure
 
 ## Coordinate Frames
 

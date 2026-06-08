@@ -147,7 +147,7 @@ def generate_launch_description():
             ]
         ),
 
-        # Enhanced Sensor Bridge Group for vineyard environment
+        # Sensor Bridge Group for vineyard environment
         TimerAction(
             period=2.0,
             actions=[
@@ -322,7 +322,7 @@ def generate_launch_description():
         #     ),
         # ]),
 
-        # Enhanced Visualization Group
+        # Visualization Group
         GroupAction([
             # RViz with vineyard-specific configuration
             Node(

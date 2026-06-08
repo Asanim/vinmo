@@ -16,4 +16,4 @@ This directory contains texture files for the vineyard simulation:
 - Use realistic colors and patterns appropriate for vineyard environment
 
 ## Placeholder Notice:
-Currently using procedural materials. Replace with actual texture files for enhanced realism.
+Currently using procedural materials. Replace with actual texture files for realism.

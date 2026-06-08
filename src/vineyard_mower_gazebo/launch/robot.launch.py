@@ -18,7 +18,7 @@ def generate_launch_description():
     urdf = os.path.join(pkg_vineyard_mower_description, 'urdf', urdf_file_name)
 
     # World file path
-    world = os.path.join(pkg_vineyard_mower_gazebo, 'worlds', 'vineyard.world')
+    world = os.path.join(pkg_vineyard_mower_gazebo, 'worlds', 'realistic_vineyard.world')
 
     # Launch configuration variables
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')

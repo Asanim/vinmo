@@ -505,7 +505,7 @@ def generate_launch_description():
             ),
         ]),
 
-        # Enhanced Diagnostic and Monitoring Group
+        # Diagnostic and Monitoring Group
         GroupAction([
             # Robot diagnostic monitor
             Node(

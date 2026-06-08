@@ -248,7 +248,7 @@ ros2 topic hz /front_camera/depth_image
 This package provides the foundation for Phase 2 development:
 
 - **Emergency Stop Systems**: Building on sensor health monitoring
-- **Advanced Safety Mechanisms**: Using vine detection for enhanced protection
+- **Advanced Safety Mechanisms**: Using vine detection for protection
 - **Sensor Failure Handling**: Leveraging the health monitoring framework
 
 ## Contributing

@@ -102,7 +102,7 @@ class VineyardRowDetector(Node):
         # Detect rows from laser data
         rows = self.detect_rows_from_laser(self.latest_scan)
         
-        # Enhanced detection with camera if available
+        # detection with camera if available
         if self.latest_image is not None:
             camera_rows = self.detect_rows_from_camera(self.latest_image)
             rows = self.fuse_detections(rows, camera_rows)
