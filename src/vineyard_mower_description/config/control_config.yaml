@@ -32,9 +32,13 @@ diff_drive_controller:
     enable_odom_tf: true
 
     cmd_vel_timeout: 0.5
-    #publish_limited_velocity: true
-    use_stamped_vel: false
-    #velocity_rolling_window_size: 10
+    publish_limited_velocity: true
+    use_stamped_vel: true
+    velocity_rolling_window_size: 10
+    
+    # Publish odometry
+    publish_odom: true
+    publish_odom_tf: true
 
     # Velocity and acceleration limits
     # Whenever a min_* is unspecified, default to -max_*
