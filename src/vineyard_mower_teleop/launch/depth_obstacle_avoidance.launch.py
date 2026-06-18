@@ -20,20 +20,26 @@ def generate_launch_description():
         
         DeclareLaunchArgument(
             'min_obstacle_area',
-            default_value='500',
-            description='Minimum obstacle area in pixels to consider'
+            default_value='200',
+            description='Minimum obstacle area in pixels to consider (adjusted for scaled image)'
         ),
         
         DeclareLaunchArgument(
             'linear_speed',
-            default_value='0.3',
+            default_value='0.5',
             description='Linear speed for autonomous navigation (m/s)'
         ),
         
         DeclareLaunchArgument(
             'angular_speed',
-            default_value='0.8',
+            default_value='1.2',
             description='Maximum angular speed (rad/s)'
+        ),
+        
+        DeclareLaunchArgument(
+            'image_scale',
+            default_value='0.5',
+            description='Image scale factor for processing (0.5 = 50% size for faster processing)'
         ),
         
         DeclareLaunchArgument(
@@ -71,6 +77,7 @@ def generate_launch_description():
                 'min_obstacle_area': LaunchConfiguration('min_obstacle_area'),
                 'linear_speed': LaunchConfiguration('linear_speed'),
                 'angular_speed': LaunchConfiguration('angular_speed'),
+                'image_scale': LaunchConfiguration('image_scale'),
                 'pid_kp': LaunchConfiguration('pid_kp'),
                 'pid_ki': LaunchConfiguration('pid_ki'),
                 'pid_kd': LaunchConfiguration('pid_kd'),

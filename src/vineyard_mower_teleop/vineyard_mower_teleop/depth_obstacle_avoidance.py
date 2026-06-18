@@ -59,13 +59,14 @@ class DepthObstacleAvoidance(Node):
         
         # Declare parameters
         self.declare_parameter('safe_distance', 2.0)  # meters
-        self.declare_parameter('min_obstacle_area', 500)  # pixels
-        self.declare_parameter('linear_speed', 0.3)
-        self.declare_parameter('angular_speed', 0.8)
+        self.declare_parameter('min_obstacle_area', 200)  # pixels (adjusted for scaled image)
+        self.declare_parameter('linear_speed', 0.5)  # increased speed
+        self.declare_parameter('angular_speed', 1.2)  # increased speed
         self.declare_parameter('pid_kp', 1.5)
         self.declare_parameter('pid_ki', 0.0)
         self.declare_parameter('pid_kd', 0.2)
         self.declare_parameter('manual_timeout', 2.0)  # seconds
+        self.declare_parameter('image_scale', 0.5)  # Scale factor for processing (0.5 = 50% size)
         
         # Get parameters
         self.safe_distance = self.get_parameter('safe_distance').value
@@ -73,6 +74,12 @@ class DepthObstacleAvoidance(Node):
         self.linear_speed = self.get_parameter('linear_speed').value
         self.angular_speed = self.get_parameter('angular_speed').value
         self.manual_timeout = self.get_parameter('manual_timeout').value
+        self.image_scale = self.get_parameter('image_scale').value
+        
+        # FPS tracking
+        self.fps_counter = 0
+        self.fps_start_time = None
+        self.current_fps = 0.0
         
         # Initialize PID controller
         self.pid = PIDController(
@@ -124,8 +131,22 @@ class DepthObstacleAvoidance(Node):
     def depth_callback(self, msg):
         """Process incoming depth image"""
         try:
+            # Update FPS counter
+            self.update_fps()
+            
             # Convert ROS Image to OpenCV format
             depth_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='32FC1')
+            
+            # Scale down image for faster processing
+            if abs(self.image_scale - 1.0) > 0.01:
+                new_width = int(depth_image.shape[1] * self.image_scale)
+                new_height = int(depth_image.shape[0] * self.image_scale)
+                depth_image = cv2.resize(
+                    depth_image, 
+                    (new_width, new_height), 
+                    interpolation=cv2.INTER_NEAREST
+                )
+            
             self.current_depth_image = depth_image
             
             # Process depth image
@@ -133,6 +154,22 @@ class DepthObstacleAvoidance(Node):
             
         except Exception as e:
             self.get_logger().error(f'Error processing depth image: {e}')
+    
+    def update_fps(self):
+        """Calculate current FPS"""
+        current_time = self.get_clock().now()
+        
+        if self.fps_start_time is None:
+            self.fps_start_time = current_time
+            self.fps_counter = 0
+        
+        self.fps_counter += 1
+        elapsed = (current_time - self.fps_start_time).nanoseconds / 1e9
+        
+        if elapsed >= 1.0:  # Update every second
+            self.current_fps = self.fps_counter / elapsed
+            self.fps_counter = 0
+            self.fps_start_time = current_time
     
     def process_depth_image(self, depth_image):
         """
@@ -149,8 +186,8 @@ class DepthObstacleAvoidance(Node):
         # Create obstacle mask (pixels closer than safe distance)
         obstacle_mask = (depth_image < self.safe_distance).astype(np.uint8) * 255
         
-        # Apply morphological operations to reduce noise
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+        # Apply morphological operations to reduce noise (smaller kernel for speed)
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
         obstacle_mask = cv2.morphologyEx(obstacle_mask, cv2.MORPH_CLOSE, kernel)
         obstacle_mask = cv2.morphologyEx(obstacle_mask, cv2.MORPH_OPEN, kernel)
         
@@ -243,6 +280,42 @@ class DepthObstacleAvoidance(Node):
             cv2.FONT_HERSHEY_SIMPLEX,
             1.0,
             color,
+            2
+        )
+        
+        # Draw FPS indicator
+        fps_text = f"FPS: {self.current_fps:.1f}"
+        cv2.putText(
+            depth_viz,
+            fps_text,
+            (10, 70),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (255, 255, 0),
+            2
+        )
+        
+        # Draw speed indicator
+        speed_text = f"Speed: L={self.linear_speed:.2f} A={self.angular_speed:.2f}"
+        cv2.putText(
+            depth_viz,
+            speed_text,
+            (10, 110),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (255, 255, 255),
+            2
+        )
+        
+        # Draw target direction value
+        dir_text = f"Dir: {self.target_direction:.2f}"
+        cv2.putText(
+            depth_viz,
+            dir_text,
+            (10, height - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 255),
             2
         )
         
