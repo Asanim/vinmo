@@ -20,8 +20,8 @@ def generate_launch_description():
         
         DeclareLaunchArgument(
             'min_obstacle_area',
-            default_value='200',
-            description='Minimum obstacle area in pixels to consider (adjusted for scaled image)'
+            default_value='100',
+            description='Minimum obstacle area in pixels to consider (for processing resolution)'
         ),
         
         DeclareLaunchArgument(
@@ -37,9 +37,9 @@ def generate_launch_description():
         ),
         
         DeclareLaunchArgument(
-            'image_scale',
-            default_value='0.5',
-            description='Image scale factor for processing (0.5 = 50% size for faster processing)'
+            'processing_height',
+            default_value='240',
+            description='Processing image height in pixels (width scales proportionally)'
         ),
         
         DeclareLaunchArgument(
@@ -77,7 +77,7 @@ def generate_launch_description():
                 'min_obstacle_area': LaunchConfiguration('min_obstacle_area'),
                 'linear_speed': LaunchConfiguration('linear_speed'),
                 'angular_speed': LaunchConfiguration('angular_speed'),
-                'image_scale': LaunchConfiguration('image_scale'),
+                'processing_height': LaunchConfiguration('processing_height'),
                 'pid_kp': LaunchConfiguration('pid_kp'),
                 'pid_ki': LaunchConfiguration('pid_ki'),
                 'pid_kd': LaunchConfiguration('pid_kd'),

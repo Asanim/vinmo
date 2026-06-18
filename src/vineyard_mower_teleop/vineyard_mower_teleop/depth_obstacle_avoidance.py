@@ -59,14 +59,14 @@ class DepthObstacleAvoidance(Node):
         
         # Declare parameters
         self.declare_parameter('safe_distance', 2.0)  # meters
-        self.declare_parameter('min_obstacle_area', 200)  # pixels (adjusted for scaled image)
+        self.declare_parameter('min_obstacle_area', 100)  # pixels (for processing resolution)
         self.declare_parameter('linear_speed', 0.5)  # increased speed
         self.declare_parameter('angular_speed', 1.2)  # increased speed
         self.declare_parameter('pid_kp', 1.5)
         self.declare_parameter('pid_ki', 0.0)
         self.declare_parameter('pid_kd', 0.2)
         self.declare_parameter('manual_timeout', 2.0)  # seconds
-        self.declare_parameter('image_scale', 0.5)  # Scale factor for processing (0.5 = 50% size)
+        self.declare_parameter('processing_height', 240)  # Base processing height in pixels
         
         # Get parameters
         self.safe_distance = self.get_parameter('safe_distance').value
@@ -74,7 +74,7 @@ class DepthObstacleAvoidance(Node):
         self.linear_speed = self.get_parameter('linear_speed').value
         self.angular_speed = self.get_parameter('angular_speed').value
         self.manual_timeout = self.get_parameter('manual_timeout').value
-        self.image_scale = self.get_parameter('image_scale').value
+        self.processing_height = self.get_parameter('processing_height').value
         
         # FPS tracking
         self.fps_counter = 0
@@ -109,6 +109,7 @@ class DepthObstacleAvoidance(Node):
         
         # State variables
         self.current_depth_image = None
+        self.original_depth_image = None  # Keep full resolution for visualization
         self.target_direction = 0.0  # Angular offset from center
         self.is_manual_mode = False
         self.last_manual_command_time = self.get_clock().now()
@@ -134,22 +135,27 @@ class DepthObstacleAvoidance(Node):
             # Update FPS counter
             self.update_fps()
             
-            # Convert ROS Image to OpenCV format
-            depth_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='32FC1')
+            # Convert ROS Image to OpenCV format (full resolution)
+            original_depth = self.bridge.imgmsg_to_cv2(msg, desired_encoding='32FC1')
             
-            # Scale down image for faster processing
-            if abs(self.image_scale - 1.0) > 0.01:
-                new_width = int(depth_image.shape[1] * self.image_scale)
-                new_height = int(depth_image.shape[0] * self.image_scale)
-                depth_image = cv2.resize(
-                    depth_image, 
-                    (new_width, new_height), 
-                    interpolation=cv2.INTER_NEAREST
-                )
+            # Store original for visualization
+            self.original_depth_image = original_depth.copy()
+            
+            # Scale down to processing resolution
+            orig_height, orig_width = original_depth.shape
+            scale_factor = self.processing_height / orig_height
+            new_width = int(orig_width * scale_factor)
+            new_height = self.processing_height
+            
+            depth_image = cv2.resize(
+                original_depth,
+                (new_width, new_height),
+                interpolation=cv2.INTER_NEAREST
+            )
             
             self.current_depth_image = depth_image
             
-            # Process depth image
+            # Process depth image (scaled down version)
             self.process_depth_image(depth_image)
             
         except Exception as e:
@@ -247,26 +253,44 @@ class DepthObstacleAvoidance(Node):
         return 0.0  # Default to center if no clear path
     
     def visualize_depth_analysis(self, depth_image, obstacle_mask, contours, width, height):
-        """Display depth analysis with OpenCV"""
+        """Display depth analysis with OpenCV using full resolution"""
+        # Use original full-resolution image for visualization
+        if self.original_depth_image is None:
+            return
+        
+        viz_depth = self.original_depth_image.copy()
+        viz_height, viz_width = viz_depth.shape
+        
+        # Calculate scale factor between processing and visualization
+        scale_x = viz_width / width
+        scale_y = viz_height / height
+        
         # Normalize depth for visualization
-        depth_viz = cv2.normalize(depth_image, None, 0, 255, cv2.NORM_MINMAX)
+        depth_viz = cv2.normalize(viz_depth, None, 0, 255, cv2.NORM_MINMAX)
         depth_viz = depth_viz.astype(np.uint8)
         depth_viz = cv2.applyColorMap(depth_viz, cv2.COLORMAP_JET)
         
-        # Draw obstacle contours
-        cv2.drawContours(depth_viz, contours, -1, (0, 0, 255), 2)
+        # Scale and draw obstacle contours on full resolution
+        scaled_contours = []
+        for contour in contours:
+            scaled_contour = contour.astype(np.float32)
+            scaled_contour[:, :, 0] *= scale_x
+            scaled_contour[:, :, 1] *= scale_y
+            scaled_contours.append(scaled_contour.astype(np.int32))
         
-        # Draw target direction indicator
-        center_x = width // 2
-        center_y = height // 2
-        target_x = int(center_x + self.target_direction * width * 0.3)
+        cv2.drawContours(depth_viz, scaled_contours, -1, (0, 0, 255), 3)
+        
+        # Draw target direction indicator (scaled)
+        center_x = viz_width // 2
+        center_y = viz_height // 2
+        target_x = int(center_x + self.target_direction * viz_width * 0.3)
         
         cv2.arrowedLine(
             depth_viz,
             (center_x, center_y),
-            (target_x, int(height * 0.8)),
+            (target_x, int(viz_height * 0.8)),
             (0, 255, 0),
-            3,
+            4,
             tipLength=0.3
         )
         
@@ -276,11 +300,11 @@ class DepthObstacleAvoidance(Node):
         cv2.putText(
             depth_viz,
             mode_text,
-            (10, 30),
+            (20, 50),
             cv2.FONT_HERSHEY_SIMPLEX,
-            1.0,
+            1.5,
             color,
-            2
+            3
         )
         
         # Draw FPS indicator
@@ -288,10 +312,22 @@ class DepthObstacleAvoidance(Node):
         cv2.putText(
             depth_viz,
             fps_text,
-            (10, 70),
+            (20, 100),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1.2,
+            (255, 255, 0),
+            3
+        )
+        
+        # Draw processing resolution info
+        res_text = f"Proc: {width}x{height} | View: {viz_width}x{viz_height}"
+        cv2.putText(
+            depth_viz,
+            res_text,
+            (20, 150),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.8,
-            (255, 255, 0),
+            (255, 255, 255),
             2
         )
         
@@ -300,9 +336,9 @@ class DepthObstacleAvoidance(Node):
         cv2.putText(
             depth_viz,
             speed_text,
-            (10, 110),
+            (20, 190),
             cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
+            0.8,
             (255, 255, 255),
             2
         )
@@ -312,21 +348,26 @@ class DepthObstacleAvoidance(Node):
         cv2.putText(
             depth_viz,
             dir_text,
-            (10, height - 10),
+            (20, viz_height - 20),
             cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
+            0.8,
             (0, 255, 255),
             2
         )
         
-        # Draw obstacle mask
-        obstacle_viz = cv2.cvtColor(obstacle_mask, cv2.COLOR_GRAY2BGR)
+        # Scale obstacle mask to match visualization resolution
+        obstacle_viz = cv2.resize(
+            obstacle_mask,
+            (viz_width, viz_height),
+            interpolation=cv2.INTER_NEAREST
+        )
+        obstacle_viz = cv2.cvtColor(obstacle_viz, cv2.COLOR_GRAY2BGR)
         
         # Combine visualizations
         combined = np.hstack([depth_viz, obstacle_viz])
         
         # Display
-        cv2.imshow('Depth Analysis | Obstacle Mask', combined)
+        cv2.imshow('Depth Analysis (Full Res) | Obstacle Mask', combined)
         cv2.waitKey(1)
     
     def control_loop(self):
