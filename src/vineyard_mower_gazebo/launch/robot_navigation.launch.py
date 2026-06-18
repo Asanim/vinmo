@@ -24,7 +24,7 @@ def generate_launch_description():
 
     # Launch configuration variables
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    x_pose = LaunchConfiguration('x_pose', default='0.0')
+    x_pose = LaunchConfiguration('x_pose', default='-10.0')
     y_pose = LaunchConfiguration('y_pose', default='0.0')
     enable_teleop = LaunchConfiguration('enable_teleop', default='true')
     enable_slam = LaunchConfiguration('enable_slam', default='true')
@@ -59,7 +59,7 @@ def generate_launch_description():
             description='Enable RViz visualization'),
 
         DeclareLaunchArgument(
-            'enable_navigation', default_value='true',
+            'enable_navigation', default_value='false',
             description='Enable autonomous navigation (Nav2)'),
 
         # Gazebo Simulation Group
@@ -170,37 +170,37 @@ def generate_launch_description():
                     ),
 
                     # Frame remapper for laser scan to use correct frame names
-                    Node(
-                        package='tf2_ros',
-                        executable='static_transform_publisher',
-                        name='gazebo_to_ros_frames',
-                        arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'vineyard_mower/base_link'],
-                        parameters=[{'use_sim_time': use_sim_time}]
-                    ),
+                    # Node(
+                    #     package='tf2_ros',
+                    #     executable='static_transform_publisher',
+                    #     name='gazebo_to_ros_frames',
+                    #     arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'vineyard_mower/base_link'],
+                    #     parameters=[{'use_sim_time': use_sim_time}]
+                    # ),
 
-                    Node(
-                        package='tf2_ros',
-                        executable='static_transform_publisher',
-                        name='lidar_frame_bridge',
-                        arguments=['0', '0', '0', '0', '0', '0', 'lidar_link', 'vineyard_mower/base_link/lidar_link'],
-                        parameters=[{'use_sim_time': use_sim_time}]
-                    ),
+                    # Node(
+                    #     package='tf2_ros',
+                    #     executable='static_transform_publisher',
+                    #     name='lidar_frame_bridge',
+                    #     arguments=['0', '0', '0', '0', '0', '0', 'lidar_link', 'vineyard_mower/base_link/lidar_link'],
+                    #     parameters=[{'use_sim_time': use_sim_time}]
+                    # ),
 
-                    Node(
-                        package='tf2_ros',
-                        executable='static_transform_publisher',
-                        name='base_link_to_front_camera',
-                        arguments=['0.2', '0', '0.1', '0', '0', '0', 'base_link', 'front_camera_link'],
-                        parameters=[{'use_sim_time': use_sim_time}]
-                    ),
+                    # Node(
+                    #     package='tf2_ros',
+                    #     executable='static_transform_publisher',
+                    #     name='base_link_to_front_camera',
+                    #     arguments=['0.2', '0', '0.1', '0', '0', '0', 'base_link', 'front_camera_link'],
+                    #     parameters=[{'use_sim_time': use_sim_time}]
+                    # ),
 
-                    Node(
-                        package='tf2_ros',
-                        executable='static_transform_publisher',
-                        name='base_link_to_rear_camera',
-                        arguments=['-0.2', '0', '0.1', '0', '0', '3.14159', 'base_link', 'rear_camera_link'],
-                        parameters=[{'use_sim_time': use_sim_time}]
-                    ),
+                    # Node(
+                    #     package='tf2_ros',
+                    #     executable='static_transform_publisher',
+                    #     name='base_link_to_rear_camera',
+                    #     arguments=['-0.2', '0', '0.1', '0', '0', '3.14159', 'base_link', 'rear_camera_link'],
+                    #     parameters=[{'use_sim_time': use_sim_time}]
+                    # ),
                 ])
             ]
         ),
@@ -242,36 +242,36 @@ def generate_launch_description():
             ),
 
             # Joy Teleoperation (if joystick connected)
-            Node(
-                package='joy',
-                executable='joy_node',
-                name='joy_node',
-                parameters=[{
-                    'use_sim_time': use_sim_time,
-                    'dev': '/dev/input/js0',
-                    'deadzone': 0.3,
-                    'autorepeat_rate': 20.0,
-                }],
-                condition=IfCondition(enable_teleop)
-            ),
+            # Node(
+            #     package='joy',
+            #     executable='joy_node',
+            #     name='joy_node',
+            #     parameters=[{
+            #         'use_sim_time': use_sim_time,
+            #         'dev': '/dev/input/js0',
+            #         'deadzone': 0.3,
+            #         'autorepeat_rate': 20.0,
+            #     }],
+            #     condition=IfCondition(enable_teleop)
+            # ),
 
-            Node(
-                package='teleop_twist_joy',
-                executable='teleop_node',
-                name='teleop_joy',
-                parameters=[{
-                    'use_sim_time': use_sim_time,
-                    'axis_linear.x': 1,
-                    'axis_angular.yaw': 0,
-                    'scale_linear.x': 0.7,
-                    'scale_angular.yaw': 1.0,
-                    'enable_button': 0,
-                    'enable_turbo_button': -1,
-                    'require_enable_button': True,
-                }],
-                remappings=[('/cmd_vel', '/cmd_vel_unstamped')],
-                condition=IfCondition(enable_teleop)
-            ),
+            # Node(
+            #     package='teleop_twist_joy',
+            #     executable='teleop_node',
+            #     name='teleop_joy',
+            #     parameters=[{
+            #         'use_sim_time': use_sim_time,
+            #         'axis_linear.x': 1,
+            #         'axis_angular.yaw': 0,
+            #         'scale_linear.x': 0.7,
+            #         'scale_angular.yaw': 1.0,
+            #         'enable_button': 0,
+            #         'enable_turbo_button': -1,
+            #         'require_enable_button': True,
+            #     }],
+            #     remappings=[('/cmd_vel', '/cmd_vel_unstamped')],
+            #     condition=IfCondition(enable_teleop)
+            # ),
         ]),
 
         # SLAM Group
