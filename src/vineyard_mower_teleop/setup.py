@@ -18,7 +18,7 @@ setup(
     zip_safe=True,
     maintainer='sam',
     maintainer_email='samjt775@gmail.com',
-    description='Keyboard teleoperation for vineyard mower differential drive robot',
+    description='Teleoperation and obstacle avoidance for vineyard mower',
     license='Apache-2.0',
     extras_require={
         'test': [
@@ -27,7 +27,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'keyboard_teleop = vineyard_mower_teleop.keyboard_teleop:main',
+            'keyboard_teleop = vineyard_mower_teleop.keyboard_teleop_control:main',
+            'depth_obstacle_avoidance = vineyard_mower_teleop.depth_obstacle_avoidance:main',
         ],
     },
 )
