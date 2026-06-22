@@ -27,7 +27,7 @@ class VineyardWorldGenerator:
     def find_base_world_file(self):
         """Find the base world file with all infrastructure"""
         script_dir = Path(__file__).parent
-        world_file = script_dir.parent / "worlds" / "realistic_vineyard.world"
+        world_file = script_dir.parent / "worlds" / "vineyard.world"
         if world_file.exists():
             return str(world_file)
         return None

@@ -115,6 +115,8 @@ class DepthObstacleAvoidance(Node):
         self.last_manual_command_time = self.get_clock().now()
         self.manual_linear = 0.0
         self.manual_angular = 0.0
+        self.processing_lock = threading.Lock()  # Lock to prevent concurrent processing
+        self.latest_depth_msg = None  # Store latest message
         
         # Terminal settings for keyboard input
         self.settings = None

@@ -48,7 +48,7 @@ vineyard_mower_gazebo/
 │   └── generate_vineyard_world.py    # World generation tool
 └── worlds/
     ├── vineyard.world                # Original simple world
-    └── realistic_vineyard.world      # vineyard world
+    └── vineyard.world      # vineyard world
 ```
 
 ## Quick Start
@@ -244,7 +244,7 @@ The `vineyard_environment_monitor.py` script provides:
 export GZ_SIM_RESOURCE_PATH=/path/to/low_poly_models
 
 # Adjust physics parameters
-# Edit realistic_vineyard.world:
+# Edit vineyard.world:
 <max_step_size>0.002</max_step_size>  # Increase for better performance
 <real_time_factor>0.8</real_time_factor>  # Reduce if needed
 ```

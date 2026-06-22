@@ -71,7 +71,7 @@ The world uses custom models located in:
 
 ```bash
 
-cd /home/sam/vinmo/src/vineyard_mower_gazebo && python scripts/generate_vineyard_world.py --from-scratch --output realistic_vineyard.world --rows 6 --spacing 2.0 --length 20
+cd /home/sam/vinmo/src/vineyard_mower_gazebo && python scripts/generate_vineyard_world.py --from-scratch --output vineyard.world --rows 6 --spacing 2.0 --length 20
 ```
 
 ```bash
