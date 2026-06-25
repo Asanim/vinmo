@@ -29,6 +29,7 @@ def generate_launch_description():
     enable_teleop = LaunchConfiguration('enable_teleop', default='true')
     enable_slam = LaunchConfiguration('enable_slam', default='true')
     enable_rviz = LaunchConfiguration('enable_rviz', default='true')
+    enable_navigation = LaunchConfiguration('enable_navigation', default='true')
 
     return LaunchDescription([
         # Launch Arguments
@@ -56,6 +57,11 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'enable_rviz', default_value='true',
             description='Enable RViz visualization'),
+
+        DeclareLaunchArgument(
+            'enable_navigation', default_value='false',
+            description='Enable autonomous navigation (Nav2)'),
+
 
         # Gazebo Simulation Group
         GroupAction([
@@ -150,18 +156,7 @@ def generate_launch_description():
                         ],
                         output='screen',
                         parameters=[{'use_sim_time': use_sim_time}],
-                        remappings=[
-                            ('/scan', '/scan_raw')
-                        ]
-                    ),
 
-                    # Laser scan frame remapper to fix frame_id issues
-                    Node(
-                        package='vineyard_mower_navigation',
-                        executable='laser_scan_frame_remapper.py',
-                        name='laser_scan_frame_remapper',
-                        output='screen',
-                        parameters=[{'use_sim_time': use_sim_time}]
                     ),
                 ])
             ]
@@ -170,24 +165,21 @@ def generate_launch_description():
         # Teleoperation Group
         GroupAction([
             # Keyboard Teleoperation
+
             Node(
-                package='teleop_twist_keyboard',
-                executable='teleop_twist_keyboard',
-                name='teleop_keyboard',
+                package='vineyard_mower_teleop',
+                executable='keyboard_teleop',
+                name='keyboard_teleop',
                 output='screen',
-                prefix='xterm -e',
                 parameters=[{
-                    'key_forward': 'w',
-                    'key_backward': 's',
-                    'key_left': 'a',
-                    'key_right': 'd',
-                    'key_run': 'shift',
-                    'key_teleop': 'q',
-                    'scale_linear': 0.5,
-                    'scale_angular': 1.0
+                    'use_sim_time': use_sim_time,
+                    'linear_speed': 1.0,
+                    'angular_speed': 0.5,
+                    'linear_increment': 0.05,
+                    'angular_increment': 0.1,
+                    'publish_rate': 10.0,
                 }],
-                remappings=[('/cmd_vel', '/cmd_vel_unstamped')],
-                condition=IfCondition(enable_teleop)
+                prefix='xterm -e',  # Run in separate terminal
             ),
 
             # Convert unstamped Twist to TwistStamped
@@ -203,36 +195,6 @@ def generate_launch_description():
                 condition=IfCondition(enable_teleop)
             ),
 
-            Node(
-                package='joy',
-                executable='joy_node',
-                name='joy_node',
-                parameters=[{
-                    'use_sim_time': use_sim_time,
-                    'dev': '/dev/input/js0',
-                    'deadzone': 0.3,
-                    'autorepeat_rate': 20.0,
-                }],
-                condition=IfCondition(enable_teleop)
-            ),
-
-            Node(
-                package='teleop_twist_joy',
-                executable='teleop_node',
-                name='teleop_joy',
-                parameters=[{
-                    'use_sim_time': use_sim_time,
-                    'axis_linear.x': 1,
-                    'axis_angular.yaw': 0,
-                    'scale_linear.x': 0.7,
-                    'scale_angular.yaw': 1.0,
-                    'enable_button': 0,
-                    'enable_turbo_button': -1,
-                    'require_enable_button': True,
-                }],
-                remappings=[('/cmd_vel', '/cmd_vel_unstamped')],
-                condition=IfCondition(enable_teleop)
-            ),
         ]),
 
         # SLAM Group
@@ -244,6 +206,23 @@ def generate_launch_description():
                     '/slam.launch.py']),
                 launch_arguments={'use_sim_time': use_sim_time}.items(),
                 condition=IfCondition(enable_slam)
+            ),
+        ]),
+
+        # Navigation Group (Nav2)
+        GroupAction([
+            # Navigation2 Stack
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(pkg_vineyard_mower_navigation, 'launch'),
+                    '/vineyard_navigation.launch.py']),
+                launch_arguments={
+                    'use_sim_time': use_sim_time,
+                    'slam': 'False',  # Use localization mode by default
+                    'navigation': 'True',
+                    'use_rviz': 'False'  # We'll use our own RViz
+                }.items(),
+                condition=IfCondition(enable_navigation)
             ),
         ]),
 

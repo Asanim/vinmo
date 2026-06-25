@@ -53,7 +53,7 @@ def generate_launch_description():
             ],
             remappings=[
                 ('scan', '/scan'),
-                ('odom', '/odom'),
+                ('odom', '/diff_drive_controller/odom'),
             ]
         ),
 
