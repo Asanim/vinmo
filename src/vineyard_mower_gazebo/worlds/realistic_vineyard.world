@@ -389,30 +389,6 @@
         <name>vine_1_13</name>
       </include>
       
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>2.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_1_1</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>7.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_1_2</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>12.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_1_3</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>17.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_1_4</name>
-      </include>
-      
     </model>
 
     <!-- Vineyard Row 2 -->
@@ -515,31 +491,6 @@
         <pose>18.75 0 0 0 0 0</pose>
         <name>vine_2_13</name>
       </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>2.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_2_1</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>7.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_2_2</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>12.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_2_3</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>17.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_2_4</name>
-      </include>
-      
     </model>
 
     <!-- Vineyard Row 3 -->
@@ -641,30 +592,6 @@
         <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>18.75 0 0 0 0 0</pose>
         <name>vine_3_13</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>2.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_3_1</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>7.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_3_2</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>12.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_3_3</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>17.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_3_4</name>
       </include>
       
     </model>
@@ -770,30 +697,6 @@
         <name>vine_4_13</name>
       </include>
       
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>2.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_4_1</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>7.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_4_2</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>12.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_4_3</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>17.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_4_4</name>
-      </include>
-      
     </model>
 
     <!-- Vineyard Row 5 -->
@@ -896,31 +799,6 @@
         <pose>18.75 0 0 0 0 0</pose>
         <name>vine_5_13</name>
       </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>2.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_5_1</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>7.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_5_2</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>12.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_5_3</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>17.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_5_4</name>
-      </include>
-      
     </model>
 
     <!-- Vineyard Row 6 -->
@@ -1022,30 +900,6 @@
         <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/vine_plant</uri>
         <pose>18.75 0 0 0 0 0</pose>
         <name>vine_6_13</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>2.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_6_1</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>7.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_6_2</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>12.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_6_3</name>
-      </include>
-      
-      <include>
-        <uri>model://home/sam/vinmo/src/vineyard_mower_gazebo/models/irrigation_pipe</uri>
-        <pose>17.5 -0.3 0 0 0 0</pose>
-        <name>irrigation_6_4</name>
       </include>
       
     </model>
