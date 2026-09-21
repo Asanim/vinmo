@@ -111,13 +111,26 @@ def generate_launch_description():
             period=5.0,
             actions=[
                 GroupAction([
+                    # Load controller parameters
+                    Node(
+                        package='controller_manager',
+                        executable='ros2_control_node',
+                        parameters=[
+                            os.path.join(pkg_vineyard_mower_description, 'config', 'control_config.yaml'),
+                            {'use_sim_time': True}
+                        ],
+                        output='screen',
+                        condition=IfCondition('false')  # Disabled - controller_manager is started by gz_ros2_control
+                    ),
+                    
                     # Joint State Broadcaster
                     Node(
                         package='controller_manager',
                         executable='spawner',
-                        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
-                        # parameters=[{'use_sim_time': use_sim_time}],
-                parameters=[{'use_sim_time': True}],
+                        arguments=['joint_state_broadcaster', 
+                                   '--controller-manager', '/controller_manager',
+                                   '--param-file', os.path.join(pkg_vineyard_mower_description, 'config', 'control_config.yaml')],
+                        parameters=[{'use_sim_time': True}],
                         output='screen',
                     ),
 
@@ -125,9 +138,10 @@ def generate_launch_description():
                     Node(
                         package='controller_manager',
                         executable='spawner',
-                        arguments=['diff_drive_controller', '--controller-manager', '/controller_manager'],
-                        # parameters=[{'use_sim_time': use_sim_time}],
-                parameters=[{'use_sim_time': True}],
+                        arguments=['diff_drive_controller', 
+                                   '--controller-manager', '/controller_manager',
+                                   '--param-file', os.path.join(pkg_vineyard_mower_description, 'config', 'control_config.yaml')],
+                        parameters=[{'use_sim_time': True}],
                         output='screen',
                     ),
                 ])
@@ -259,10 +273,10 @@ def generate_launch_description():
                 parameters=[{
                     'analyzers.sensors.type': 'diagnostic_aggregator/GenericAnalyzer',
                     'analyzers.sensors.path': 'Sensors',
-                    'analyzers.sensors.find_and_remove_prefix': 'vineyard_mower',
+                    'analyzers.sensors.find_and_remove_prefix': ['vineyard_mower'],
                     'analyzers.controls.type': 'diagnostic_aggregator/GenericAnalyzer',
                     'analyzers.controls.path': 'Controls',
-                    'analyzers.controls.find_and_remove_prefix': 'diff_drive_controller',
+                    'analyzers.controls.find_and_remove_prefix': ['diff_drive_controller'],
                 }],
                 output='screen'
             ),

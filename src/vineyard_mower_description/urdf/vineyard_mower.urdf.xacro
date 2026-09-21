@@ -435,8 +435,8 @@
         <param name="min">-10</param>
         <param name="max">10</param>
       </command_interface>
-      <state_interface name="velocity"/>
       <state_interface name="position"/>
+      <state_interface name="velocity"/>
     </joint>
     
     <joint name="right_wheel_joint">
@@ -444,15 +444,14 @@
         <param name="min">-10</param>
         <param name="max">10</param>
       </command_interface>
-      <state_interface name="velocity"/>
       <state_interface name="position"/>
+      <state_interface name="velocity"/>
     </joint>
   </ros2_control>
 
   <!-- Gazebo ros2_control plugin -->
   <gazebo>
     <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <parameters>$(find vineyard_mower_description)/config/control_config.yaml</parameters>
       <ros>
         <namespace></namespace>
         <remapping>/clock:=/clock</remapping>
